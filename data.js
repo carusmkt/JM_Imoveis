@@ -550,7 +550,7 @@ window.imoveis = [
       ""
     ],
     "imagem": "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180416718-9.jpg",
-    "youtube": "",
+    "youtube": "https://youtu.be/_r2qqx59VFs?si=FXDwPPRBrhzRObw3",
     "badges": [
       "Mobiliado",
       "Locação",
