@@ -84,7 +84,7 @@ window.imoveis = [
       "Ar-condicionado",
       "Mobiliado",
       "Varanda gourmet",
-      "Churrasqueira à carvão"
+      "Aceita animais"
     ],
     "caracteristicasCondominio": [
       "Salão de festas",
@@ -568,7 +568,7 @@ window.imoveis = [
   {
     "id": 1785180400144,
     "nome": "Green Coast",
-    "construtora": "",
+    "construtora": "Baggio",
     "localizacao": "Centro, Balneário Camboriú",
     "cep": "88330-584",
     "cidade": "Balneário Camboriú",
@@ -595,31 +595,31 @@ window.imoveis = [
     "areaUtil": "",
     "areaTotal": "",
     "imagens": [
-      "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180416718-9.jpg",
-      "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180407604-3.jpg",
-      "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180426157-15.jpg",
-      "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180429367-17.jpg",
-      "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180404637-1.jpg",
-      "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180406074-2.jpg",
-      "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180403205-0.jpg",
-      "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180408791-4.jpg",
-      "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180410371-5.jpg",
-      "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180412031-6.jpg",
-      "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180413757-7.jpg",
-      "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180418265-10.jpg",
-      "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180419482-11.jpg",
-      "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180420933-12.jpg",
-      "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180422626-13.jpg",
-      "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180424587-14.jpg",
-      "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180427778-16.jpg",
-      "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180430952-18.jpg",
-      "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180432912-19.jpg",
-      "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180436058-21.jpg",
-      "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180437816-22.jpg",
       "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180439325-23.jpg",
+      "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180430952-18.jpg",
+      "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180406074-2.jpg",
+      "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180429367-17.jpg",
+      "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180436058-21.jpg",
+      "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180434597-20.jpg",
+      "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180412031-6.jpg",
+      "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180404637-1.jpg",
+      "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180418265-10.jpg",
+      "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180437816-22.jpg",
+      "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180424587-14.jpg",
+      "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180422626-13.jpg",
+      "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180426157-15.jpg",
+      "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180427778-16.jpg",
+      "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180432912-19.jpg",
+      "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180420933-12.jpg",
+      "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180419482-11.jpg",
       "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180440888-24.jpg",
+      "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180403205-0.jpg",
+      "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180416718-9.jpg",
       "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180415190-8.jpg",
-      "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180434597-20.jpg"
+      "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180410371-5.jpg",
+      "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180413757-7.jpg",
+      "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180408791-4.jpg",
+      "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180407604-3.jpg"
     ],
     "fotosComodos": [
       "",
@@ -648,7 +648,7 @@ window.imoveis = [
       "",
       ""
     ],
-    "imagem": "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180416718-9.jpg",
+    "imagem": "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180439325-23.jpg",
     "youtube": "https://youtu.be/_r2qqx59VFs?si=FXDwPPRBrhzRObw3",
     "badges": [
       "Mobiliado",
@@ -658,13 +658,17 @@ window.imoveis = [
     "destaqueBadge": "",
     "badge": "Mobiliado",
     "caracteristicas": [
-      "Mobiliado"
+      "Mobiliado",
+      "Churrasqueira a carvão"
     ],
     "caracteristicasCondominio": [
       "Academia",
       "Espaço gourmet",
       "Piscina",
-      "Salão de festas"
+      "Salão de festas",
+      "Churrasqueira",
+      "Sala de jogos",
+      "Elevador"
     ],
     "descricao": "<p>Praticidade, conforto e localização privilegiada para viver o melhor de Balneário Camboriú!</p><p>Este apartamento mobiliado está pronto para receber você, com ambientes amplos e uma estrutura completa para tornar a rotina mais confortável.</p><p><iconify-icon icon=\"lucide:bed\"></iconify-icon> 1 suíte e 2 demi-suítes<br><iconify-icon icon=\"lucide:car\"></iconify-icon> 2 vagas de garagem<br><iconify-icon icon=\"lucide:ruler\"></iconify-icon> 113 m² de área<br><iconify-icon icon=\"lucide:waves-ladder\"></iconify-icon>Piscina, academia, espaço gourmet e salão de festas</p><p>O imóvel também conta com ar-condicionado, armários planejados, churrasqueira e aceita animais de estimação.</p><p><iconify-icon icon=\"lucide:map-pin\"></iconify-icon>Rua 906, Centro — Balneário Camboriú/SC<br><strong>Aluguel:</strong> R$ 10.000/mês<br>Condomínio e IPTU isentos.</p>",
     "descricaoMarkdown": "Praticidade, conforto e localização privilegiada para viver o melhor de Balneário Camboriú!\n\nEste apartamento mobiliado está pronto para receber você, com ambientes amplos e uma estrutura completa para tornar a rotina mais confortável.\n\n:icon[lucide:bed]: 1 suíte e 2 demi-suítes\n:icon[lucide:car]: 2 vagas de garagem\n:icon[lucide:ruler]: 113 m² de área\n:icon[lucide:waves-ladder]:Piscina, academia, espaço gourmet e salão de festas\n\nO imóvel também conta com ar-condicionado, armários planejados, churrasqueira e aceita animais de estimação.\n\n:icon[lucide:map-pin]:Rua 906, Centro — Balneário Camboriú/SC\n**Aluguel:** R$ 10.000/mês\nCondomínio e IPTU isentos."
