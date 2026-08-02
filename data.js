@@ -595,6 +595,9 @@ window.imoveis = [
     "areaUtil": "",
     "areaTotal": "",
     "imagens": [
+      "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180439325-23.jpg",
+      "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180430952-18.jpg",
+      "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180436058-21.jpg",
       "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180416718-9.jpg",
       "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180407604-3.jpg",
       "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180426157-15.jpg",
@@ -612,11 +615,8 @@ window.imoveis = [
       "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180422626-13.jpg",
       "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180424587-14.jpg",
       "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180427778-16.jpg",
-      "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180430952-18.jpg",
       "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180432912-19.jpg",
-      "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180436058-21.jpg",
       "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180437816-22.jpg",
-      "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180439325-23.jpg",
       "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180440888-24.jpg",
       "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180415190-8.jpg",
       "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180434597-20.jpg"
@@ -648,7 +648,7 @@ window.imoveis = [
       "",
       ""
     ],
-    "imagem": "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180416718-9.jpg",
+    "imagem": "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785180400144-1785180439325-23.jpg",
     "youtube": "https://youtu.be/_r2qqx59VFs?si=FXDwPPRBrhzRObw3",
     "badges": [
       "Mobiliado",
