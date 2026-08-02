@@ -658,13 +658,18 @@ window.imoveis = [
     "destaqueBadge": "",
     "badge": "Mobiliado",
     "caracteristicas": [
-      "Mobiliado"
+      "Mobiliado",
+      "Aceita animais",
+      "Ar-condicionado"
     ],
     "caracteristicasCondominio": [
       "Academia",
       "Espaço gourmet",
       "Piscina",
-      "Salão de festas"
+      "Salão de festas",
+      "Churrasqueira",
+      "Sala de jogos",
+      "Elevador"
     ],
     "descricao": "<p>Praticidade, conforto e localização privilegiada para viver o melhor de Balneário Camboriú!</p><p>Este apartamento mobiliado está pronto para receber você, com ambientes amplos e uma estrutura completa para tornar a rotina mais confortável.</p><p><iconify-icon icon=\"lucide:bed\"></iconify-icon> 1 suíte e 2 demi-suítes<br><iconify-icon icon=\"lucide:car\"></iconify-icon> 2 vagas de garagem<br><iconify-icon icon=\"lucide:ruler\"></iconify-icon> 113 m² de área<br><iconify-icon icon=\"lucide:waves-ladder\"></iconify-icon>Piscina, academia, espaço gourmet e salão de festas</p><p>O imóvel também conta com ar-condicionado, armários planejados, churrasqueira e aceita animais de estimação.</p><p><iconify-icon icon=\"lucide:map-pin\"></iconify-icon>Rua 906, Centro — Balneário Camboriú/SC<br><strong>Aluguel:</strong> R$ 10.000/mês<br>Condomínio e IPTU isentos.</p>",
     "descricaoMarkdown": "Praticidade, conforto e localização privilegiada para viver o melhor de Balneário Camboriú!\n\nEste apartamento mobiliado está pronto para receber você, com ambientes amplos e uma estrutura completa para tornar a rotina mais confortável.\n\n:icon[lucide:bed]: 1 suíte e 2 demi-suítes\n:icon[lucide:car]: 2 vagas de garagem\n:icon[lucide:ruler]: 113 m² de área\n:icon[lucide:waves-ladder]:Piscina, academia, espaço gourmet e salão de festas\n\nO imóvel também conta com ar-condicionado, armários planejados, churrasqueira e aceita animais de estimação.\n\n:icon[lucide:map-pin]:Rua 906, Centro — Balneário Camboriú/SC\n**Aluguel:** R$ 10.000/mês\nCondomínio e IPTU isentos."
