@@ -881,6 +881,7 @@ window.imoveis = [
     "areaUtil": "142 m²",
     "areaTotal": "180 m²",
     "imagens": [
+      "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785789987920-1785790021239-17.jpg",
       "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785789987920-1785789996144-0.jpg",
       "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785789987920-1785789997688-1.jpg",
       "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785789987920-1785789999019-2.jpg",
@@ -898,7 +899,6 @@ window.imoveis = [
       "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785789987920-1785790016731-14.jpg",
       "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785789987920-1785790018168-15.jpg",
       "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785789987920-1785790019703-16.jpg",
-      "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785789987920-1785790021239-17.jpg",
       "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785789987920-1785790022878-18.jpg",
       "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785789987920-1785790024206-19.jpg",
       "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785789987920-1785790025744-20.jpg",
@@ -908,7 +908,7 @@ window.imoveis = [
       "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785789987920-1785790031786-24.jpg",
       "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785789987920-1785790032809-25.jpg",
       "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785789987920-1785790034448-26.jpg",
-      "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785789987920-1785790035984-27.jpg"
+      "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785789987920-1785790064788-27.jpg"
     ],
     "fotosComodos": [
       "",
@@ -940,7 +940,7 @@ window.imoveis = [
       "",
       ""
     ],
-    "imagem": "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785789987920-1785789996144-0.jpg",
+    "imagem": "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785789987920-1785790021239-17.jpg",
     "youtube": "",
     "badges": [],
     "destaqueBadge": "",
