@@ -646,7 +646,7 @@ window.imoveis = [
   {
     "id": 1785180400144,
     "nome": "Green Coast",
-    "construtora": "",
+    "construtora": "Baggio",
     "localizacao": "Centro, Balneário Camboriú",
     "cep": "88330-584",
     "cidade": "Balneário Camboriú",
@@ -853,7 +853,7 @@ window.imoveis = [
   },
   {
     "id": 1785789987920,
-    "nome": "The place",
+    "nome": "The Place",
     "construtora": "Embraed",
     "localizacao": "Centro, Balneário Camboriú",
     "cep": "88330-048",
