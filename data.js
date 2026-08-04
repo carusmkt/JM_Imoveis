@@ -479,13 +479,15 @@ window.imoveis = [
     ],
     "imagem": "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1785789987920-1785790021239-17.jpg",
     "youtube": "",
-    "badges": [],
+    "badges": [
+      "Alto Padrão"
+    ],
     "destaqueBadge": "",
-    "badge": "",
+    "badge": "Alto Padrão",
     "caracteristicas": [
       "churrasqueira a carvão",
       "Mobiliado",
-      "Aceita animais"
+      "Ar-condicionado"
     ],
     "caracteristicasCondominio": [
       "Piscina",
@@ -496,7 +498,14 @@ window.imoveis = [
       "cinema",
       "brinquedoteca",
       "salão de jogos",
-      "Elevador"
+      "Elevador",
+      "Sala de jogos",
+      "Cinema",
+      "Bicicletário",
+      "Sauna",
+      "Portão eletrônico",
+      "Portaria 24h",
+      "Câmeras de Segurança"
     ],
     "descricao": "<p>Viva com conforto e sofisticação no Edifício The Place Central Residence, um empreendimento de alto padrão da Embraed localizado no Centro de Balneário Camboriú.</p><p><iconify-icon icon=\"lucide:sofa\"></iconify-icon> Totalmente mobiliado<br><iconify-icon icon=\"lucide:ruler\"></iconify-icon> 142 m² de área privativas<br><iconify-icon icon=\"lucide:bed\"></iconify-icon> três suítes, incluindo uma suíte master com banheira de hidromassagem, além de lavabo, cozinha planejada, área de serviço e três vagas de garagem.</p><p>A área social integra sala de estar, sala de jantar e sacada, criando um ambiente acolhedor para receber familiares e amigos. O espaço grill e a vista panorâmica para o mar tornam o imóvel ainda mais especial.</p><p>O empreendimento oferece uma completa estrutura de lazer: <br><iconify-icon icon=\"lucide:waves-ladder\"></iconify-icon> piscinas adulto e infantil<br><iconify-icon icon=\"lucide:dumbbell\"></iconify-icon> academia,<br><iconify-icon icon=\"lucide:wine\"></iconify-icon> salão de festas, espaço gourmet, salão de jogos, brinquedoteca, playground, cinema, hidromassagem e espelho-d’água.</p><p>Uma excelente oportunidade para quem procura um apartamento mobiliado, com vista para o mar, infraestrutura completa e o reconhecido padrão construtivo da Embraed em uma das regiões mais valorizadas de Balneário Camboriú.</p><p>Entre em contato para obter mais informações e agendar uma visita.</p>",
     "descricaoMarkdown": "Viva com conforto e sofisticação no Edifício The Place Central Residence, um empreendimento de alto padrão da Embraed localizado no Centro de Balneário Camboriú.\n\n:icon[lucide:sofa]: Totalmente mobiliado\n:icon[lucide:ruler]: 142 m² de área privativas\n:icon[lucide:bed]: três suítes, incluindo uma suíte master com banheira de hidromassagem, além de lavabo, cozinha planejada, área de serviço e três vagas de garagem.\n\nA área social integra sala de estar, sala de jantar e sacada, criando um ambiente acolhedor para receber familiares e amigos. O espaço grill e a vista panorâmica para o mar tornam o imóvel ainda mais especial.\n\nO empreendimento oferece uma completa estrutura de lazer: \n:icon[lucide:waves-ladder]: piscinas adulto e infantil\n:icon[lucide:dumbbell]: academia,\n:icon[lucide:wine]: salão de festas, espaço gourmet, salão de jogos, brinquedoteca, playground, cinema, hidromassagem e espelho-d’água.\n\nUma excelente oportunidade para quem procura um apartamento mobiliado, com vista para o mar, infraestrutura completa e o reconhecido padrão construtivo da Embraed em uma das regiões mais valorizadas de Balneário Camboriú.\n\nEntre em contato para obter mais informações e agendar uma visita."
