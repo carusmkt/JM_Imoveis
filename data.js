@@ -487,7 +487,8 @@ window.imoveis = [
     "caracteristicas": [
       "churrasqueira a carvão",
       "Mobiliado",
-      "Ar-condicionado"
+      "Ar-condicionado",
+      "Entrada para churrasqueira a gás"
     ],
     "caracteristicasCondominio": [
       "Piscina",
