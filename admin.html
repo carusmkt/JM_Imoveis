@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
   <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
   <!-- Carrega os dados locais para inicialização caso o github falhe ou esteja em localhost -->
   <script>document.write('<script src="data.js?v=' + Date.now() + '"><\/script>');</script>
   <style>
@@ -61,9 +62,32 @@
     .btn-danger:hover { background: #c0392b; }
     .btn-success { background: #27ae60; color: white; }
     .btn-success:hover { background: #2ecc71; }
-    
-    .list-item { display: flex; align-items: center; padding: 15px; border: 1px solid var(--border-color); margin-bottom: 10px; border-radius: 14px; background: var(--container-bg); transition: background-color 0.3s, border-color 0.3s, transform 0.2s ease, box-shadow 0.2s ease; }
+
+    .btn-sync { transition: background-color 0.3s ease, var(--transition); }
+    .btn-sync.btn-sync-pending { background: #e0a020; color: #fff; }
+    .btn-sync.btn-sync-pending:hover { background: #ecb03a; }
+    .btn-sync.btn-sync-error { background: #e74c3c; color: #fff; }
+    .btn-sync.btn-sync-error:hover { background: #c0392b; }
+    .btn-sync.btn-sync-syncing { background: var(--color-leather); color: var(--color-khaki); cursor: default; }
+    .btn-sync.btn-sync-synced { background: #27ae60; color: #fff; }
+    .btn-sync.btn-sync-synced:hover { background: #2ecc71; }
+    .btn-sync-icon-wrap { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 1em; height: 1em; }
+    .btn-sync-icon { position: absolute; inset: 0; width: 100%; height: 100%; transition: opacity 0.2s ease, transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1); opacity: 1; transform: scale(1); }
+    .btn-sync-icon.btn-sync-icon-hidden { opacity: 0; transform: scale(0.4); pointer-events: none; }
+    @keyframes syncCheckPop {
+      0% { transform: scale(0.3); opacity: 0; }
+      55% { transform: scale(1.3); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    #btn-sync-icon-check.pop { animation: syncCheckPop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+    .list-item { position: relative; overflow: hidden; display: flex; align-items: center; padding: 15px; border: 1px solid var(--border-color); margin-bottom: 10px; border-radius: 14px; background: var(--container-bg); transition: background-color 0.3s, border-color 0.3s, transform 0.2s ease, box-shadow 0.2s ease; }
     .list-item:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
+    .list-item.pressing { transform: scale(0.98); box-shadow: 0 0 0 2px var(--color-leather) inset; }
+    .list-item-press-bar {
+      position: absolute; left: 0; bottom: 0; height: 3px; width: 0%;
+      background: var(--color-leather); border-radius: 0 0 14px 14px; transition: none;
+    }
     .list-item-img { width: 80px; height: 60px; object-fit: cover; border-radius: 10px; margin-right: 15px; }
     .list-item-info { flex: 1; }
     .list-item-title { font-weight: 600; font-size: 1.1rem; }
@@ -470,13 +494,165 @@
       border: 1px dashed var(--border-color); border-radius: 10px; padding: 10px; width: 100%;
       margin-bottom: 1.5rem; cursor: pointer; color: var(--color-taupe); font-size: 0.85rem;
     }
+
+    /* Dialog de reorganização em galeria (drag & drop) */
+    .gallery-dialog {
+      width: min(900px, 94vw);
+      max-height: 85vh;
+      padding: 0;
+      max-width: none;
+    }
+    .gallery-dialog[open] { display: flex; flex-direction: column; }
+    .gallery-dialog .dialog-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.75rem 2rem 1rem; flex-shrink: 0;
+    }
+    .gallery-dialog .dialog-header h2 { margin-bottom: 0; }
+    .gallery-dialog .dialog-header p { font-size: 0.85rem; color: var(--color-taupe); margin-top: 4px; }
+    .gallery-dialog .dialog-close { font-size: 1.4rem; }
+    .gallery-dialog .dialog-footer {
+      display: flex; justify-content: flex-end; gap: 12px;
+      padding: 1.25rem 2rem; border-top: 1px solid var(--border-color);
+      background: var(--container-bg); flex-shrink: 0; border-radius: 0 0 20px 20px;
+    }
+    .gallery-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      align-items: start;
+      gap: 12px; padding: 0 2rem 1.5rem; overflow-y: auto; flex: 1;
+    }
+    .gallery-card {
+      position: relative; border: 1px solid var(--border-color); border-radius: 12px;
+      overflow: hidden; background: var(--container-bg); cursor: grab; user-select: none;
+      transition: box-shadow 0.15s;
+    }
+    .gallery-card:active { cursor: grabbing; }
+    .gallery-card img { width: 100%; height: 80px; object-fit: cover; display: block; pointer-events: none; }
+    .gallery-card-num {
+      position: absolute; top: 6px; left: 6px; background: rgba(0,0,0,0.65); color: #fff;
+      font-size: 0.7rem; font-weight: 700; padding: 2px 7px; border-radius: 20px; line-height: 1.4;
+    }
+    .gallery-card-name {
+      font-size: 0.72rem; padding: 6px 8px; font-weight: 600;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .gallery-card.sortable-ghost { opacity: 0.3; }
+    .gallery-card.sortable-chosen { box-shadow: 0 6px 16px rgba(0,0,0,0.3); }
+    .gallery-card.highlight-pulse { animation: galleryPulse 1.2s ease; }
+    @keyframes galleryPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(38,38,38,0); }
+      25% { box-shadow: 0 0 0 4px var(--color-leather); }
+    }
+
+    .pin-gate-overlay {
+      position: fixed; inset: 0; z-index: 9999;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(20, 18, 16, 0.55);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    }
+    .pin-gate-overlay.hidden { display: none; }
+    body.pin-locked { overflow: hidden; }
+    .pin-gate-card {
+      width: 90vw; max-width: 360px; background: var(--container-bg); color: var(--text-color);
+      border-radius: 20px; padding: 2.5rem 2rem; text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    .pin-gate-card iconify-icon { font-size: 2.2rem; color: var(--color-taupe); }
+    .pin-gate-card h2 { font-size: 1.15rem; margin: 0.75rem 0 0.5rem; }
+    .pin-gate-card p { font-size: 0.85rem; color: var(--color-taupe); margin-bottom: 1.5rem; line-height: 1.5; }
+    .pin-gate-input {
+      width: 100%; padding: 14px; border: 1px solid var(--border-color); border-radius: 10px;
+      background: var(--input-bg); color: var(--input-text); font-size: 1.4rem; letter-spacing: 0.5rem;
+      text-align: center; font-family: var(--font-main); margin-bottom: 1rem;
+    }
+    .pin-gate-input:focus { outline: none; border-color: var(--color-leather); }
+    .pin-gate-error { color: #e74c3c; font-size: 0.8rem; min-height: 1.2rem; margin-bottom: 0.75rem; }
+    .pin-gate-btn {
+      width: 100%; height: 46px; border: none; border-radius: 10px; cursor: pointer;
+      background: var(--color-leather); color: var(--color-khaki); font-weight: 600;
+      text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px; transition: var(--transition);
+    }
+    .pin-gate-btn:hover { background: var(--color-taupe); color: #fff; }
+
+    /* ===================== MOBILE ===================== */
+    @media (max-width: 640px) {
+      body { padding: 0.75rem; }
+      .container { padding: 1.1rem; border-radius: 16px; }
+
+      /* evita zoom automático do iOS ao focar inputs */
+      input, select, textarea { font-size: 16px !important; }
+
+      .header-actions {
+        flex-wrap: wrap; align-items: flex-start; gap: 12px;
+      }
+      .header-actions h1 { font-size: 1.3rem; }
+      .header-actions > div { width: 100%; justify-content: flex-start; flex-wrap: wrap; gap: 8px; }
+      .header-actions .btn { flex: 1 1 auto; justify-content: center; }
+      .header-actions .btn-icon-square { flex: 0 0 44px; }
+
+      #list-panel > div[style*="justify-content: space-between"] {
+        flex-wrap: wrap; gap: 10px;
+      }
+      #list-panel > div[style*="justify-content: space-between"] > div {
+        width: 100%; display: flex; gap: 8px;
+      }
+      #list-panel > div[style*="justify-content: space-between"] > div .btn { flex: 1 1 0; font-size: 0.75rem; padding: 0 10px; }
+
+      .list-item { padding: 10px; gap: 10px; align-items: center; }
+      .list-item-img { width: 56px; height: 44px; margin-right: 0; flex-shrink: 0; }
+      .list-item-info { min-width: 0; }
+      .list-item-title { font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .list-item-title span { display: none; }
+      .list-item-price { font-size: 0.78rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .list-item-actions { gap: 2px; flex-shrink: 0; }
+      .list-item-actions .icon-btn { font-size: 1rem; padding: 4px; }
+      .list-item, .list-item-img { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
+
+      /* dialogs ocupam a tela quase inteira, sem sobra de padding */
+      .custom-dialog { max-width: 94vw; padding: 1.25rem; }
+      .property-dialog, .descricao-dialog, .gallery-dialog { width: 94vw; max-height: 92vh; }
+      .property-dialog .dialog-header,
+      .descricao-dialog .dialog-header,
+      .gallery-dialog .dialog-header { padding: 1.25rem 1.25rem 0.75rem; align-items: flex-start; }
+      .property-dialog .dialog-header h2,
+      .descricao-dialog .dialog-header h2,
+      .gallery-dialog .dialog-header h2 { font-size: 1.15rem; }
+      .gallery-dialog .dialog-header p { font-size: 0.8rem; }
+      .property-dialog .dialog-body { padding: 0 1.25rem 1.25rem; }
+      .property-dialog .dialog-footer,
+      .gallery-dialog .dialog-footer { padding: 1rem 1.25rem; flex-wrap: wrap; }
+      .property-dialog .dialog-footer .btn,
+      .gallery-dialog .dialog-footer .btn { flex: 1 1 auto; }
+
+      /* formulários: todo grid de 2 colunas vira 1 coluna empilhada */
+      .form-row { grid-template-columns: 1fr !important; gap: 12px !important; }
+      .feature-list { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+
+      .gallery-grid { padding: 0 1.25rem 1.25rem; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 8px; }
+      .gallery-card img { height: 64px; }
+
+      .dropzone { padding: 1.25rem 0.75rem; }
+
+      .btn { font-size: 0.78rem; padding: 0 14px; }
+    }
   </style>
   <script>
     const savedTheme = localStorage.getItem('admin_theme') || 'light';
     document.documentElement.setAttribute('data-theme', savedTheme);
   </script>
 </head>
-<body>
+<body class="pin-locked">
+
+  <!-- PIN GATE -->
+  <div class="pin-gate-overlay" id="pin-gate-overlay">
+    <div class="pin-gate-card">
+      <iconify-icon icon="lucide:lock"></iconify-icon>
+      <h2>Acesso Restrito</h2>
+      <p>Este espaço é exclusivo para administradores, favor, digite o PIN para entrar.</p>
+      <input type="password" inputmode="numeric" pattern="[0-9]*" maxlength="8" class="pin-gate-input" id="pin-gate-input" autocomplete="off" placeholder="········">
+      <div class="pin-gate-error" id="pin-gate-error"></div>
+      <button class="pin-gate-btn" id="pin-gate-btn">Entrar</button>
+    </div>
+  </div>
 
   <!-- DIALOG DE CONFIRMAÇÃO NATIVO HTML -->
   <dialog id="confirm-dialog" class="custom-dialog">
@@ -568,7 +744,14 @@
       <div style="display: flex; gap: 10px; align-items: center;">
         <button class="btn btn-secondary btn-icon-square" onclick="toggleTheme()" title="Alternar Tema"><iconify-icon id="theme-icon" icon="lucide:sun" style="font-size: 1.2rem;"></iconify-icon></button>
         <button class="btn btn-secondary" onclick="showConfig()">Configurações</button>
-        <button class="btn btn-success" onclick="saveToGithub()" id="btn-sync">Sincronizar <iconify-icon icon="mdi:cloud-upload"></iconify-icon></button>
+        <button class="btn btn-sync" onclick="saveToGithub()" id="btn-sync">
+          <span id="btn-sync-label">Sincronizar</span>
+          <span class="btn-sync-icon-wrap">
+            <svg id="btn-sync-icon-cloud" class="btn-sync-icon" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none" /><g fill="none"><path fill="currentColor" d="M2 14.5A4.5 4.5 0 0 0 6.5 19h12a3.5 3.5 0 0 0 .5-6.965a7 7 0 0 0-13.76-1.857A4.5 4.5 0 0 0 2 14.5" opacity=".16" /><path stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M2 14.5A4.5 4.5 0 0 0 6.5 19h12a3.5 3.5 0 0 0 .5-6.965a7 7 0 0 0-13.76-1.857A4.5 4.5 0 0 0 2 14.5Z" /></g></svg>
+            <svg id="btn-sync-icon-check" class="btn-sync-icon btn-sync-icon-hidden" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none" /><g fill="none"><circle cx="12" cy="12" r="8" fill="currentColor" fill-opacity=".25" /><path stroke="currentColor" stroke-width="1.2" d="m9.5 12l1.894 1.894a.15.15 0 0 0 .212 0L15.5 10" /></g></svg>
+            <iconify-icon id="btn-sync-icon-loading" icon="mdi:loading" class="spin btn-sync-icon btn-sync-icon-hidden"></iconify-icon>
+          </span>
+        </button>
       </div>
     </div>
     
@@ -616,12 +799,30 @@
 
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
         <h2>Imóveis Cadastrados</h2>
-        <button class="btn btn-primary" onclick="openForm()">+ Novo Imóvel</button>
+        <div style="display: flex; gap: 10px;">
+          <button class="btn btn-secondary" onclick="openGallery()"><iconify-icon icon="mdi:drag"></iconify-icon> Reorganizar</button>
+          <button class="btn btn-primary" onclick="openForm()">+ Novo Imóvel</button>
+        </div>
       </div>
       <div id="imoveis-list"></div>
     </div>
 
   </div>
+
+  <!-- DIALOG DE REORGANIZAÇÃO EM GALERIA (DRAG & DROP) -->
+  <dialog id="gallery-dialog" class="custom-dialog gallery-dialog">
+    <div class="dialog-header">
+      <div>
+        <h2>Reorganizar Imóveis</h2>
+        <p>Arraste os cards para definir a ordem de exibição no site.</p>
+      </div>
+      <button class="icon-btn dialog-close" onclick="closeGalleryDialog()"><iconify-icon icon="mdi:close"></iconify-icon></button>
+    </div>
+    <div class="gallery-grid" id="gallery-grid"></div>
+    <div class="dialog-footer">
+      <button type="button" class="btn btn-primary" onclick="closeGalleryDialog()">Concluído</button>
+    </div>
+  </dialog>
 
   <!-- DIALOG DEDICADO DE CADASTRO/EDIÇÃO DE IMÓVEL -->
   <dialog id="property-dialog" class="custom-dialog property-dialog">
@@ -904,6 +1105,7 @@
 
   <script>
     let imoveisData = [];
+    let syncState = 'synced';
     let githubConfig = {
       owner: localStorage.getItem('gh_owner') || '',
       repo: localStorage.getItem('gh_repo') || '',
@@ -945,6 +1147,7 @@
     if (window.imoveis) {
       imoveisData = JSON.parse(JSON.stringify(window.imoveis)); // Clone profundo
       renderList();
+      setSyncState('synced');
     }
 
     // Cadastros parciais enviados pelo site (busca.html) via localStorage
@@ -1009,6 +1212,71 @@
       updateDescricaoButtonPreview();
 
       recalcQualidade();
+    }
+
+    // ESTADO DO BOTÃO DE SINCRONIZAÇÃO
+    function setSyncState(state, opts) {
+      opts = opts || {};
+      syncState = state;
+      const btn = document.getElementById('btn-sync');
+      const label = document.getElementById('btn-sync-label');
+      const iconCloud = document.getElementById('btn-sync-icon-cloud');
+      const iconCheck = document.getElementById('btn-sync-icon-check');
+      const iconLoading = document.getElementById('btn-sync-icon-loading');
+
+      btn.classList.remove('btn-sync-pending', 'btn-sync-error', 'btn-sync-syncing', 'btn-sync-synced');
+      iconCloud.classList.add('btn-sync-icon-hidden');
+      iconCheck.classList.add('btn-sync-icon-hidden');
+      iconLoading.classList.add('btn-sync-icon-hidden');
+      iconCheck.classList.remove('pop');
+
+      if (state === 'pending') {
+        btn.classList.add('btn-sync-pending');
+        iconCloud.classList.remove('btn-sync-icon-hidden');
+        label.textContent = 'Sincronizar';
+      } else if (state === 'error') {
+        btn.classList.add('btn-sync-error');
+        iconCloud.classList.remove('btn-sync-icon-hidden');
+        label.textContent = 'Tentar novamente';
+      } else if (state === 'syncing') {
+        btn.classList.add('btn-sync-syncing');
+        iconLoading.classList.remove('btn-sync-icon-hidden');
+        label.textContent = opts.text || 'Sincronizando...';
+      } else if (state === 'synced') {
+        btn.classList.add('btn-sync-synced');
+        iconCheck.classList.remove('btn-sync-icon-hidden');
+        label.textContent = 'Sincronizado';
+        if (opts.animate) {
+          void iconCheck.offsetWidth; // reinicia a animação
+          iconCheck.classList.add('pop');
+          playSyncSound();
+        }
+      }
+    }
+
+    function markDirty() {
+      if (syncState === 'syncing') return;
+      setSyncState('pending');
+    }
+
+    function playSyncSound() {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const now = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(880, now);
+        osc.frequency.exponentialRampToValueAtTime(1320, now + 0.09);
+        gain.gain.setValueAtTime(0.0001, now);
+        gain.gain.exponentialRampToValueAtTime(0.18, now + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.32);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.34);
+        osc.onended = () => ctx.close();
+      } catch (e) { /* Web Audio indisponível, ignora silenciosamente */ }
     }
 
     function customConfirm(msg, title = 'Confirmar') {
@@ -1094,9 +1362,54 @@
             <button class="icon-btn" onclick="openForm(${imovel.id})" title="Editar"><iconify-icon icon="mdi:pencil"></iconify-icon></button>
             <button class="icon-btn" onclick="deleteProperty(${imovel.id})" title="Excluir"><iconify-icon icon="mdi:delete" style="color: #e74c3c;"></iconify-icon></button>
           </div>
+          <div class="list-item-press-bar"></div>
         `;
         container.appendChild(item);
+        attachLongPress(item, imovel.id);
       });
+    }
+
+    function attachLongPress(el, id) {
+      const HOLD_MS = 3000;
+      const MOVE_TOLERANCE = 10;
+      const bar = el.querySelector('.list-item-press-bar');
+      let pressTimer = null;
+      let startX = 0, startY = 0;
+
+      function start(e) {
+        if (e.target.closest('.list-item-actions')) return;
+        if (e.pointerType === 'mouse' && e.button !== 0) return;
+        startX = e.clientX;
+        startY = e.clientY;
+        el.classList.add('pressing');
+        bar.style.transition = `width ${HOLD_MS}ms linear`;
+        requestAnimationFrame(() => { bar.style.width = '100%'; });
+        pressTimer = setTimeout(() => {
+          cancelPress();
+          openGallery(id);
+        }, HOLD_MS);
+      }
+
+      function move(e) {
+        if (!pressTimer) return;
+        if (Math.abs(e.clientX - startX) > MOVE_TOLERANCE || Math.abs(e.clientY - startY) > MOVE_TOLERANCE) {
+          cancelPress();
+        }
+      }
+
+      function cancelPress() {
+        clearTimeout(pressTimer);
+        pressTimer = null;
+        el.classList.remove('pressing');
+        bar.style.transition = 'none';
+        bar.style.width = '0%';
+      }
+
+      el.addEventListener('pointerdown', start);
+      el.addEventListener('pointermove', move);
+      el.addEventListener('pointerup', cancelPress);
+      el.addEventListener('pointerleave', cancelPress);
+      el.addEventListener('pointercancel', cancelPress);
     }
 
     function moveUp(id) {
@@ -1104,6 +1417,7 @@
       if (index <= 0) return;
       [imoveisData[index - 1], imoveisData[index]] = [imoveisData[index], imoveisData[index - 1]];
       renderList();
+      markDirty();
     }
 
     function moveDown(id) {
@@ -1111,6 +1425,62 @@
       if (index === -1 || index === imoveisData.length - 1) return;
       [imoveisData[index + 1], imoveisData[index]] = [imoveisData[index], imoveisData[index + 1]];
       renderList();
+      markDirty();
+    }
+
+    let gallerySortable = null;
+
+    function openGallery(highlightId) {
+      renderGallery();
+      document.getElementById('gallery-dialog').showModal();
+      if (highlightId) {
+        setTimeout(() => {
+          const card = document.querySelector(`#gallery-grid .gallery-card[data-id="${highlightId}"]`);
+          if (card) {
+            card.scrollIntoView({ block: 'center', behavior: 'instant' });
+            card.classList.add('highlight-pulse');
+            setTimeout(() => card.classList.remove('highlight-pulse'), 1200);
+          }
+        }, 50);
+      }
+    }
+
+    function closeGalleryDialog() {
+      document.getElementById('gallery-dialog').close();
+    }
+
+    function renderGallery() {
+      const grid = document.getElementById('gallery-grid');
+      grid.innerHTML = '';
+
+      imoveisData.forEach((imovel, idx) => {
+        const card = document.createElement('div');
+        card.className = 'gallery-card';
+        card.dataset.id = imovel.id;
+        card.innerHTML = `
+          <span class="gallery-card-num">${idx + 1}</span>
+          <img src="${(imovel.imagens && imovel.imagens.length > 0) ? imovel.imagens[0] : imovel.imagem}" alt="">
+          <div class="gallery-card-name">${imovel.nome}</div>
+        `;
+        grid.appendChild(card);
+      });
+
+      if (gallerySortable) gallerySortable.destroy();
+      gallerySortable = new Sortable(grid, {
+        animation: 150,
+        ghostClass: 'sortable-ghost',
+        chosenClass: 'sortable-chosen',
+        scroll: true,
+        scrollSensitivity: 80,
+        scrollSpeed: 12,
+        onEnd: function () {
+          const newOrder = Array.from(grid.children).map(el => Number(el.dataset.id));
+          imoveisData.sort((a, b) => newOrder.indexOf(a.id) - newOrder.indexOf(b.id));
+          grid.querySelectorAll('.gallery-card-num').forEach((el, idx) => { el.textContent = idx + 1; });
+          renderList();
+          markDirty();
+        }
+      });
     }
 
     function setToggle(group, value) {
@@ -1316,6 +1686,7 @@
       if (deleteTargetId !== null) {
         imoveisData = imoveisData.filter(i => i.id !== deleteTargetId);
         renderList();
+        markDirty();
       }
       closeDialog();
     }
@@ -2451,6 +2822,7 @@
 
       closePropertyDialog();
       renderList();
+      markDirty();
     }
 
     // Função para codificar em base64 corretamente lidando com UTF-8 (acentos)
@@ -2486,13 +2858,14 @@
     async function saveToGithub() {
       if (!githubConfig.owner || !githubConfig.repo || !githubConfig.token) {
         showMsg('Por favor, configure o Token e os dados do repositório primeiro.', 'error');
+        setSyncState('error');
         showConfig();
         return;
       }
 
       const btnSync = document.getElementById('btn-sync');
       btnSync.disabled = true;
-      btnSync.innerHTML = 'Sincronizando... <iconify-icon icon="mdi:loading" class="spin"></iconify-icon>';
+      setSyncState('syncing');
 
       const headers = {
         'Authorization': `Bearer ${githubConfig.token}`,
@@ -2519,7 +2892,7 @@
             if (!src.startsWith('data:')) continue; // já é uma foto sincronizada anteriormente
 
             doneImgs++;
-            btnSync.innerHTML = `Enviando foto ${doneImgs}/${totalImgs}... <iconify-icon icon="mdi:loading" class="spin"></iconify-icon>`;
+            setSyncState('syncing', { text: `Enviando foto ${doneImgs}/${totalImgs}...` });
 
             const fileName = `images/${imovel.id}-${Date.now()}-${i}.jpg`;
             const putImgRes = await fetch(`${apiBase}/contents/${fileName}`, {
@@ -2539,7 +2912,7 @@
           imovel.imagem = imovel.imagens.length > 0 ? imovel.imagens[0] : '';
         }
 
-        btnSync.innerHTML = 'Salvando dados... <iconify-icon icon="mdi:loading" class="spin"></iconify-icon>';
+        setSyncState('syncing', { text: 'Salvando dados...' });
 
         // 2. Tentar pegar o SHA do data.js atual (se existir)
         const path = 'data.js';
@@ -2568,17 +2941,56 @@
         if (putRes.ok) {
           renderList(); // atualiza as miniaturas com os novos links das fotos
           showMsg('Sucesso! Sincronizado com o GitHub. O site será atualizado em alguns minutos.', 'success');
+          setSyncState('synced', { animate: true });
         } else {
           throw new Error(formatGithubError(await readGithubError(putRes)));
         }
       } catch (error) {
         console.error(error);
         showMsg('Erro: ' + error.message, 'error');
+        setSyncState('error');
       } finally {
         btnSync.disabled = false;
-        btnSync.innerHTML = 'Sincronizar <iconify-icon icon="mdi:cloud-upload"></iconify-icon>';
       }
     }
+
+    // PIN GATE
+    (function () {
+      const ADMIN_PIN = '15182223';
+      const overlay = document.getElementById('pin-gate-overlay');
+      const input = document.getElementById('pin-gate-input');
+      const errorEl = document.getElementById('pin-gate-error');
+      const btn = document.getElementById('pin-gate-btn');
+
+      function unlock() {
+        sessionStorage.setItem('jm_admin_pin_ok', '1');
+        overlay.classList.add('hidden');
+        document.body.classList.remove('pin-locked');
+      }
+
+      function tryUnlock() {
+        if (input.value === ADMIN_PIN) {
+          unlock();
+        } else {
+          errorEl.textContent = 'PIN incorreto. Tente novamente.';
+          input.value = '';
+          input.focus();
+        }
+      }
+
+      if (sessionStorage.getItem('jm_admin_pin_ok') === '1') {
+        unlock();
+      } else {
+        input.focus();
+        btn.addEventListener('click', tryUnlock);
+        input.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter') tryUnlock();
+        });
+        input.addEventListener('input', function () {
+          errorEl.textContent = '';
+        });
+      }
+    })();
   </script>
 </body>
 </html>
