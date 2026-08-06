@@ -523,6 +523,7 @@
       margin-bottom: 1.5rem;
       color: var(--color-taupe);
       font-weight: 500;
+      scroll-margin-top: 110px;
     }
 
     .grid {
@@ -1968,7 +1969,7 @@
       </div>
     </section>
 
-    <div class="results-header">
+    <div class="results-header" id="resultados">
       <span id="results-count">0 imóveis encontrados</span>
       <span>Catálogo completo da JM Imóveis</span>
     </div>
@@ -2531,7 +2532,16 @@
       const eventName = el.tagName === 'INPUT' ? 'input' : 'change';
       el.addEventListener(eventName, filterProperties);
     });
-    document.getElementById('apply-filters').addEventListener('click', filterProperties);
+    document.getElementById('apply-filters').addEventListener('click', () => {
+      filterProperties();
+      document.getElementById('resultados')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    if (window.location.hash === '#resultados') {
+      requestAnimationFrame(() => {
+        document.getElementById('resultados')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    }
     document.getElementById('clear-filters').addEventListener('click', () => {
       filterTipo.value = '';
       filterFinalidade.value = '';
