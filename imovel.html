@@ -763,6 +763,93 @@
       margin-bottom: 2rem;
     }
 
+    /* Código do imóvel + link, com botões de copiar para levar à conversa */
+    .property-ref {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 2rem;
+    }
+
+    .property-ref-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      max-width: 100%;
+      background: var(--color-surface);
+      border: 1px solid var(--color-khaki);
+      border-radius: 999px;
+      padding: 6px 6px 6px 16px;
+    }
+
+    .property-ref-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--color-taupe);
+      flex-shrink: 0;
+    }
+
+    .property-ref-value {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--color-leather);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .property-ref-link {
+      max-width: min(340px, 46vw);
+      font-weight: 500;
+    }
+
+    .property-ref-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+      border: none;
+      background: var(--color-khaki);
+      color: var(--color-leather);
+      font-family: var(--font-main);
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .property-ref-btn:hover {
+      background: var(--color-leather);
+      color: var(--color-pearl);
+    }
+
+    .property-ref-btn.copied {
+      background: #27ae60;
+      color: #fff;
+    }
+
+    .property-ref-btn iconify-icon {
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 560px) {
+      .property-ref-item {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .property-ref-link {
+        max-width: none;
+      }
+    }
+
     .property-stats {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -1133,7 +1220,9 @@
 
   <script>document.write('<script src="data.js?v=' + Date.now() + '"><\/script>');</script>
   <script>
-    const imoveis = window.imoveis || [];
+    // Imóveis arquivados ou na lixeira continuam no data.js (para o Admin),
+    // mas nunca aparecem no site.
+    const imoveis = (window.imoveis || []).filter(imovel => !imovel.arquivado && !imovel.lixeira);
 
     function navigateWithTransition(url) {
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -1160,10 +1249,12 @@
       { nome: 'Exclusividade', icon: 'lucide:star' },
       { nome: 'Alto Padrão', icon: 'lucide:crown' },
       { nome: 'Locação', icon: 'lucide:key-round' },
+      { nome: 'Venda', icon: 'lucide:handshake' },
       { nome: 'Oportunidade', icon: 'lucide:trending-up' },
       { nome: 'Comercial', icon: 'lucide:building-2' },
       { nome: 'Mobiliado', icon: 'lucide:sofa' },
       { nome: 'Lançamento', icon: 'lucide:rocket' },
+      { nome: 'Quadra mar', icon: 'lucide:sailboat' },
       { nome: 'Frente Mar', icon: 'lucide:waves' },
       { nome: 'Decorado', icon: 'lucide:badge-check' }
     ];
@@ -1554,6 +1645,56 @@
       }
     });
 
+    // Cópia com plano B: a API moderna falha em contexto inseguro, em navegadores
+    // antigos ou quando a aba está sem foco — nesses casos usamos o textarea.
+    function copiarTexto(texto) {
+      const viaTextarea = () => {
+        const helper = document.createElement('textarea');
+        helper.value = texto;
+        helper.setAttribute('readonly', '');
+        helper.style.position = 'fixed';
+        helper.style.top = '0';
+        helper.style.opacity = '0';
+        document.body.appendChild(helper);
+        helper.select();
+        helper.setSelectionRange(0, texto.length);
+        let ok = false;
+        try {
+          ok = document.execCommand('copy');
+        } catch (e) {
+          ok = false;
+        }
+        document.body.removeChild(helper);
+        return ok;
+      };
+
+      if (navigator.clipboard && window.isSecureContext) {
+        return navigator.clipboard.writeText(texto)
+          .then(() => true)
+          .catch(() => viaTextarea());
+      }
+      return Promise.resolve(viaTextarea());
+    }
+
+    // Copia o texto de um elemento (código ou link) e confirma visualmente no botão
+    window.copyRef = async function (elementId, btn) {
+      const el = document.getElementById(elementId);
+      if (!el || !btn) return;
+
+      const copiou = await copiarTexto(el.textContent.trim());
+      if (!copiou) return;
+
+      if (btn._copyTimer) clearTimeout(btn._copyTimer);
+      const original = btn.innerHTML;
+      btn.innerHTML = '<iconify-icon icon="mdi:check"></iconify-icon> Copiado!';
+      btn.classList.add('copied');
+      btn._copyTimer = setTimeout(() => {
+        btn.innerHTML = original;
+        btn.classList.remove('copied');
+        btn._copyTimer = null;
+      }, 2000);
+    };
+
     function youtubeEmbedUrl(url) {
       const match = String(url || '').match(/(?:v=|youtu\.be\/|embed\/)([\w-]{11})/);
       return match ? `https://www.youtube.com/embed/${match[1]}` : null;
@@ -1622,7 +1763,10 @@
 
       const statsHTML = renderFeaturesHTML(imovel, 'property-stat');
 
-      const whatsappText = encodeURIComponent(`Olá, gostaria de saber mais sobre o imóvel: ${imovel.nome} - ${imovel.localizacao}.`);
+      // Link canônico do imóvel, pronto para copiar e compartilhar
+      const imovelUrl = new URL('imovel.html?id=' + imovel.id, window.location.href).href;
+
+      const whatsappText = encodeURIComponent(`Olá, gostaria de saber mais sobre o imóvel: ${imovel.nome} (cód. ${imovel.codigo || imovel.id}) - ${imovel.localizacao}.\n${imovelUrl}`);
       const embedUrl = youtubeEmbedUrl(imovel.youtube);
       currentVideoEmbedUrl = embedUrl || '';
 
@@ -1722,6 +1866,25 @@
             <a class="maps-link" href="${buildMapsUrl(imovel)}" target="_blank" rel="noopener noreferrer">Ver no Google Maps <iconify-icon icon="mdi:map-marker-radius-outline"></iconify-icon></a>
           </div>
           <div class="property-price">${imovel.preco || 'Consulte'}</div>
+
+          <div class="property-ref">
+            <div class="property-ref-item">
+              <span class="property-ref-label">Código</span>
+              <span class="property-ref-value" id="property-code">${imovel.codigo || imovel.id}</span>
+              <button type="button" class="property-ref-btn" onclick="copyRef('property-code', this)"
+                aria-label="Copiar código do imóvel">
+                <iconify-icon icon="mdi:content-copy"></iconify-icon> Copiar
+              </button>
+            </div>
+            <div class="property-ref-item">
+              <span class="property-ref-label">Link</span>
+              <span class="property-ref-value property-ref-link" id="property-link">${imovelUrl}</span>
+              <button type="button" class="property-ref-btn" onclick="copyRef('property-link', this)"
+                aria-label="Copiar link do imóvel">
+                <iconify-icon icon="mdi:link-variant"></iconify-icon> Copiar
+              </button>
+            </div>
+          </div>
 
           <div class="property-stats">
             ${statsHTML}

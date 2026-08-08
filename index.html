@@ -645,12 +645,23 @@
     }
 
     .hero h1 {
-      font-size: clamp(2.2rem, 4.5vw, 4.2rem);
+      font-size: clamp(2.2rem, 4.5vw, 4rem);
       font-weight: 400;
       margin-bottom: 0.75rem;
       line-height: 1.1;
-      max-width: 900px;
+      /* A linha "BALNEÁRIO CAMBORIÚ E REGIÃO." ocupa ~15.9x o tamanho da fonte.
+         Na fonte máxima (64px) ela precisa de ~1020px: o limite abaixo garante que
+         ela caiba inteira e o título fique sempre em duas linhas. */
+      max-width: 1120px;
       color: var(--hero-title);
+    }
+
+    /* Quebra fixa do título em duas linhas. Abaixo de 768px a segunda linha não
+       caberia inteira, então a quebra sai e o texto volta a fluir naturalmente. */
+    @media (max-width: 768px) {
+      .hero-break {
+        display: none;
+      }
     }
 
     .hero h2 {
@@ -668,14 +679,92 @@
       width: 100%;
       max-width: 1120px;
       margin: 0 auto clamp(1.25rem, 3vh, 2rem);
-      display: grid;
-      grid-template-columns: repeat(4, minmax(150px, 1fr));
-      gap: 0.75rem 1.4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      text-align: left;
       background: var(--color-surface);
       padding: 1.25rem 1.5rem;
       border-radius: 22px;
       box-shadow: var(--shadow-soft);
       border: 1px solid var(--color-khaki);
+    }
+
+    /* Filtros principais sempre visíveis: Finalidade / Tipo / Cidade / Dormitórios */
+    .filter-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(150px, 1fr));
+      gap: 0.75rem 1.4rem;
+    }
+
+    /* Filtros avançados: escondidos com display:none para não recortar os dropdowns */
+    .filter-advanced {
+      display: none;
+    }
+
+    .filter-bar.advanced-open .filter-advanced {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(150px, 1fr));
+      gap: 0.75rem 1.4rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--color-khaki);
+      animation: filter-advanced-in 0.32s ease both;
+    }
+
+    @keyframes filter-advanced-in {
+      from {
+        opacity: 0;
+        transform: translateY(-6px);
+      }
+
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .filter-bar.advanced-open .filter-advanced {
+        animation: none;
+      }
+    }
+
+    .filter-advanced-toggle {
+      align-self: center;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      border: 1px solid var(--color-khaki);
+      color: var(--color-leather);
+      font-family: var(--font-main);
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 9px 20px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .filter-advanced-toggle:hover,
+    .filter-advanced-toggle:focus-visible {
+      background: var(--color-leather);
+      color: var(--color-pearl);
+      border-color: var(--color-leather);
+    }
+
+    .filter-advanced-toggle iconify-icon {
+      font-size: 1.05rem;
+    }
+
+    .filter-advanced-toggle .toggle-chevron {
+      transition: transform 0.25s ease;
+    }
+
+    .filter-bar.advanced-open .filter-advanced-toggle .toggle-chevron {
+      transform: rotate(180deg);
     }
 
     .filter-group {
@@ -979,10 +1068,12 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: var(--color-leather);
+      /* Cores fixas: o slide fica sobre a foto escurecida pelo overlay, então o texto
+         é sempre branco — não pode seguir o tema, senão escurece no modo escuro. */
+      background: #262626;
       background-size: cover;
       background-position: center;
-      color: var(--color-pearl);
+      color: #fff;
       text-align: center;
       padding: 1.5rem;
       overflow: hidden;
@@ -1033,7 +1124,7 @@
       align-items: center;
       gap: 8px;
       padding: 10px 22px;
-      border: 1px solid var(--color-pearl);
+      border: 1px solid #fff;
       border-radius: 999px;
       font-size: 0.8rem;
       font-weight: 600;
@@ -1043,8 +1134,8 @@
     }
 
     .carousel-saibamais:hover .carousel-saibamais-btn {
-      background: var(--color-pearl);
-      color: var(--color-leather);
+      background: #fff;
+      color: #262626;
     }
 
     .carousel-nav {
@@ -1090,7 +1181,10 @@
       left: 50%;
       transform: translateX(-50%);
       display: flex;
-      gap: 6px;
+      flex-wrap: wrap;
+      justify-content: center;
+      max-width: calc(100% - 100px);
+      gap: 5px;
       z-index: 3;
     }
 
@@ -1119,11 +1213,11 @@
 
     .card-badges {
       position: absolute;
-      top: 20px;
-      left: 20px;
+      top: 16px;
+      left: 16px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 6px;
       z-index: 2;
       opacity: 1;
       transform: translateY(0) scale(1);
@@ -1154,6 +1248,19 @@
     .card-badge svg {
       font-size: 1.05rem;
       color: var(--color-khaki);
+    }
+
+    /* Etiquetas menores no preview do card (o modal mantém o tamanho padrão) */
+    .card-img .card-badge {
+      padding: 3px 9px;
+      font-size: 0.62rem;
+      gap: 4px;
+      letter-spacing: 0.2px;
+    }
+
+    .card-img .card-badge iconify-icon,
+    .card-img .card-badge svg {
+      font-size: 0.82rem;
     }
 
     .card-content {
@@ -2292,10 +2399,15 @@
 
       .filter-bar {
         margin-bottom: 1.25rem;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 0.6rem 1rem;
+        gap: 0.8rem;
         padding: 1rem 1.1rem;
         border-radius: 18px;
+      }
+
+      .filter-grid,
+      .filter-bar.advanced-open .filter-advanced {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.6rem 1rem;
       }
 
       .filter-wide {
@@ -2312,11 +2424,6 @@
 
       .site-select.open .site-select-menu {
         transform: translateY(0);
-      }
-
-      /* Busca da tela inicial replica os campos do desktop, exceto Busca Livre */
-      .filter-bar .filter-group:has(#filter-busca) {
-        display: none;
       }
 
       .hero-cta,
@@ -2349,9 +2456,14 @@
 
     @media (max-width: 560px) {
       .filter-bar {
+        gap: 0.85rem;
+        padding: 1rem;
+      }
+
+      .filter-grid,
+      .filter-bar.advanced-open .filter-advanced {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 0.85rem 1rem;
-        padding: 1rem;
       }
 
       .filter-wide {
@@ -2425,124 +2537,168 @@
 
   <!-- Hero -->
   <section class="hero">
-    <h1 class="serif text-center">IMÓVEIS SELECIONADOS EM BALNEÁRIO CAMBORIÚ E REGIÃO.</h1>
+    <h1 class="serif text-center">IMÓVEIS SELECIONADOS EM <br class="hero-break">BALNEÁRIO CAMBORIÚ E REGIÃO.</h1>
     <h2 class="text-center">Exclusividade e conforto sob medida, o endereço ideal para o seu momento.</h2>
 
-    <div class="filter-bar">
-      <div class="filter-group">
-        <label for="filter-tipo">Tipo</label>
-        <input type="hidden" id="filter-tipo" value="">
-        <div class="site-select" data-select="filter-tipo">
-          <button type="button" class="site-select-trigger" aria-haspopup="listbox" aria-expanded="false">
-            <span data-select-label>Todos os tipos</span>
-            <iconify-icon icon="mdi:chevron-down"></iconify-icon>
-          </button>
-          <div class="site-select-menu" role="listbox">
-            <button type="button" class="site-select-option selected" data-value="" data-label="Todos os tipos">Todos os
-              tipos</button>
-            <button type="button" class="site-select-option" data-value="Apartamento"
-              data-label="Apartamento">Apartamento</button>
-            <button type="button" class="site-select-option" data-value="Casa" data-label="Casa">Casa</button>
-            <button type="button" class="site-select-option" data-value="Cobertura"
-              data-label="Cobertura">Cobertura</button>
-            <button type="button" class="site-select-option" data-value="Sala Comercial"
-              data-label="Sala Comercial">Sala Comercial</button>
+    <div class="filter-bar" id="filter-bar">
+      <div class="filter-grid">
+        <div class="filter-group">
+          <label for="filter-finalidade">Finalidade</label>
+          <input type="hidden" id="filter-finalidade" value="Compra">
+          <div class="site-select" data-select="filter-finalidade">
+            <button type="button" class="site-select-trigger" aria-haspopup="listbox" aria-expanded="false">
+              <span data-select-label>Venda</span>
+              <iconify-icon icon="mdi:chevron-down"></iconify-icon>
+            </button>
+            <div class="site-select-menu" role="listbox">
+              <button type="button" class="site-select-option selected" data-value="Compra"
+                data-label="Venda">Venda</button>
+              <button type="button" class="site-select-option" data-value="Aluguel"
+                data-label="Aluguel">Aluguel</button>
+              <button type="button" class="site-select-option" data-value="" data-label="Todas">Todas</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <label for="filter-tipo">Tipo</label>
+          <input type="hidden" id="filter-tipo" value="">
+          <div class="site-select" data-select="filter-tipo">
+            <button type="button" class="site-select-trigger" aria-haspopup="listbox" aria-expanded="false">
+              <span data-select-label>Todos os tipos</span>
+              <iconify-icon icon="mdi:chevron-down"></iconify-icon>
+            </button>
+            <div class="site-select-menu" role="listbox">
+              <button type="button" class="site-select-option selected" data-value="" data-label="Todos os tipos">Todos
+                os tipos</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <label for="filter-cidade">Cidade</label>
+          <input type="hidden" id="filter-cidade" value="">
+          <div class="site-select" data-select="filter-cidade">
+            <button type="button" class="site-select-trigger" aria-haspopup="listbox" aria-expanded="false">
+              <span data-select-label>Todas as cidades</span>
+              <iconify-icon icon="mdi:chevron-down"></iconify-icon>
+            </button>
+            <div class="site-select-menu" role="listbox">
+              <button type="button" class="site-select-option selected" data-value=""
+                data-label="Todas as cidades">Todas as cidades</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <label for="filter-quartos">Dormitórios</label>
+          <input type="hidden" id="filter-quartos" value="">
+          <div class="site-select" data-select="filter-quartos">
+            <button type="button" class="site-select-trigger" aria-haspopup="listbox" aria-expanded="false">
+              <span data-select-label>Qualquer</span>
+              <iconify-icon icon="mdi:chevron-down"></iconify-icon>
+            </button>
+            <div class="site-select-menu" role="listbox">
+              <button type="button" class="site-select-option selected" data-value=""
+                data-label="Qualquer">Qualquer</button>
+              <button type="button" class="site-select-option" data-value="1" data-label="1+ dormitório">1+
+                dormitório</button>
+              <button type="button" class="site-select-option" data-value="2" data-label="2+ dormitórios">2+
+                dormitórios</button>
+              <button type="button" class="site-select-option" data-value="3" data-label="3+ dormitórios">3+
+                dormitórios</button>
+              <button type="button" class="site-select-option" data-value="4" data-label="4+ dormitórios">4+
+                dormitórios</button>
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="filter-group">
-        <label for="filter-finalidade">Finalidade</label>
-        <input type="hidden" id="filter-finalidade" value="">
-        <div class="site-select" data-select="filter-finalidade">
-          <button type="button" class="site-select-trigger" aria-haspopup="listbox" aria-expanded="false">
-            <span data-select-label>Todas</span>
-            <iconify-icon icon="mdi:chevron-down"></iconify-icon>
-          </button>
-          <div class="site-select-menu" role="listbox">
-            <button type="button" class="site-select-option selected" data-value="" data-label="Todas">Todas</button>
-            <button type="button" class="site-select-option" data-value="Compra" data-label="Compra">Compra</button>
-            <button type="button" class="site-select-option" data-value="Aluguel" data-label="Aluguel">Aluguel</button>
+      <button type="button" class="filter-advanced-toggle" id="filter-advanced-toggle" aria-expanded="false"
+        aria-controls="filter-advanced">
+        <iconify-icon icon="mdi:tune-variant"></iconify-icon>
+        <span>Filtros Avançados</span>
+        <iconify-icon icon="mdi:chevron-down" class="toggle-chevron"></iconify-icon>
+      </button>
+
+      <div class="filter-advanced" id="filter-advanced">
+        <div class="filter-group">
+          <label for="filter-banheiros">Banheiros</label>
+          <input type="hidden" id="filter-banheiros" value="">
+          <div class="site-select" data-select="filter-banheiros">
+            <button type="button" class="site-select-trigger" aria-haspopup="listbox" aria-expanded="false">
+              <span data-select-label>Qualquer</span>
+              <iconify-icon icon="mdi:chevron-down"></iconify-icon>
+            </button>
+            <div class="site-select-menu" role="listbox">
+              <button type="button" class="site-select-option selected" data-value=""
+                data-label="Qualquer">Qualquer</button>
+              <button type="button" class="site-select-option" data-value="1" data-label="1+ banheiro">1+
+                banheiro</button>
+              <button type="button" class="site-select-option" data-value="2" data-label="2+ banheiros">2+
+                banheiros</button>
+              <button type="button" class="site-select-option" data-value="3" data-label="3+ banheiros">3+
+                banheiros</button>
+              <button type="button" class="site-select-option" data-value="4" data-label="4+ banheiros">4+
+                banheiros</button>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="filter-group">
-        <label for="filter-banheiros">Banheiros</label>
-        <input type="hidden" id="filter-banheiros" value="">
-        <div class="site-select" data-select="filter-banheiros">
-          <button type="button" class="site-select-trigger" aria-haspopup="listbox" aria-expanded="false">
-            <span data-select-label>Qualquer</span>
-            <iconify-icon icon="mdi:chevron-down"></iconify-icon>
-          </button>
-          <div class="site-select-menu" role="listbox">
-            <button type="button" class="site-select-option selected" data-value=""
-              data-label="Qualquer">Qualquer</button>
-            <button type="button" class="site-select-option" data-value="1" data-label="1+ banheiro">1+
-              banheiro</button>
-            <button type="button" class="site-select-option" data-value="2" data-label="2+ banheiros">2+
-              banheiros</button>
-            <button type="button" class="site-select-option" data-value="3" data-label="3+ banheiros">3+
-              banheiros</button>
-            <button type="button" class="site-select-option" data-value="4" data-label="4+ banheiros">4+
-              banheiros</button>
+        <div class="filter-group">
+          <label for="filter-vagas">Vagas</label>
+          <input type="hidden" id="filter-vagas" value="">
+          <div class="site-select" data-select="filter-vagas">
+            <button type="button" class="site-select-trigger" aria-haspopup="listbox" aria-expanded="false">
+              <span data-select-label>Qualquer</span>
+              <iconify-icon icon="mdi:chevron-down"></iconify-icon>
+            </button>
+            <div class="site-select-menu" role="listbox">
+              <button type="button" class="site-select-option selected" data-value=""
+                data-label="Qualquer">Qualquer</button>
+              <button type="button" class="site-select-option" data-value="1" data-label="1+ vaga">1+ vaga</button>
+              <button type="button" class="site-select-option" data-value="2" data-label="2+ vagas">2+ vagas</button>
+              <button type="button" class="site-select-option" data-value="3" data-label="3+ vagas">3+ vagas</button>
+              <button type="button" class="site-select-option" data-value="4" data-label="4+ vagas">4+ vagas</button>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="filter-group">
-        <label for="filter-vagas">Vagas</label>
-        <input type="hidden" id="filter-vagas" value="">
-        <div class="site-select" data-select="filter-vagas">
-          <button type="button" class="site-select-trigger" aria-haspopup="listbox" aria-expanded="false">
-            <span data-select-label>Qualquer</span>
-            <iconify-icon icon="mdi:chevron-down"></iconify-icon>
-          </button>
-          <div class="site-select-menu" role="listbox">
-            <button type="button" class="site-select-option selected" data-value=""
-              data-label="Qualquer">Qualquer</button>
-            <button type="button" class="site-select-option" data-value="1" data-label="1+ vaga">1+ vaga</button>
-            <button type="button" class="site-select-option" data-value="2" data-label="2+ vagas">2+ vagas</button>
-            <button type="button" class="site-select-option" data-value="3" data-label="3+ vagas">3+ vagas</button>
-            <button type="button" class="site-select-option" data-value="4" data-label="4+ vagas">4+ vagas</button>
+        <div class="filter-group filter-wide">
+          <label for="filter-caracteristica">Características</label>
+          <input type="hidden" id="filter-caracteristica" value="">
+          <div class="site-select" data-select="filter-caracteristica">
+            <button type="button" class="site-select-trigger" aria-haspopup="listbox" aria-expanded="false">
+              <span data-select-label>Todas as características</span>
+              <iconify-icon icon="mdi:chevron-down"></iconify-icon>
+            </button>
+            <div class="site-select-menu" role="listbox">
+              <button type="button" class="site-select-option selected" data-value=""
+                data-label="Todas as características">Todas as características</button>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="filter-group filter-wide">
-        <label for="filter-caracteristica">Características</label>
-        <input type="hidden" id="filter-caracteristica" value="">
-        <div class="site-select" data-select="filter-caracteristica">
-          <button type="button" class="site-select-trigger" aria-haspopup="listbox" aria-expanded="false">
-            <span data-select-label>Todas as características</span>
-            <iconify-icon icon="mdi:chevron-down"></iconify-icon>
-          </button>
-          <div class="site-select-menu" role="listbox">
-            <button type="button" class="site-select-option selected" data-value=""
-              data-label="Todas as características">Todas as características</button>
+        <div class="filter-group">
+          <label for="price-min">Preço mínimo</label>
+          <div class="price-input-wrap">
+            <span class="price-prefix">R$</span>
+            <input type="number" id="price-min" min="0" step="1000">
           </div>
         </div>
-      </div>
 
-      <div class="filter-group">
-        <label for="price-min">Preço mínimo</label>
-        <div class="price-input-wrap">
-          <span class="price-prefix">R$</span>
-          <input type="number" id="price-min" min="0" step="1000">
+        <div class="filter-group">
+          <label for="price-max">Preço máximo</label>
+          <div class="price-input-wrap">
+            <span class="price-prefix">R$</span>
+            <input type="number" id="price-max" min="0" step="1000">
+          </div>
         </div>
-      </div>
 
-      <div class="filter-group">
-        <label for="price-max">Preço máximo</label>
-        <div class="price-input-wrap">
-          <span class="price-prefix">R$</span>
-          <input type="number" id="price-max" min="0" step="1000">
+        <div class="filter-group filter-wide">
+          <label for="filter-busca">Busca Livre</label>
+          <input type="text" id="filter-busca" placeholder="Procure por cidade, bairro, condomínio ou código">
         </div>
-      </div>
-
-      <div class="filter-group filter-full">
-        <label for="filter-busca">Busca Livre</label>
-        <input type="text" id="filter-busca" placeholder="Procure por cidade, bairro, condomínio ou código">
       </div>
     </div>
 
@@ -2599,7 +2755,7 @@
         <div class="logo footer-logo">
           <img src="img/logo.svg" alt="JM Imóveis">
         </div>
-        <p>Especialistas no mercado imobiliário do litoral catarinense.</p>
+        <p>Especialista no mercado imobiliário de Balneário Camboriú e Praia Brava</p>
         <p>CRECI 49.802F/SC<br>CRECI 11.616J/SC</p>
       </div>
 
@@ -2676,7 +2832,9 @@
 
   <script>document.write('<script src="data.js?v=' + Date.now() + '"><\/script>');</script>
   <script>
-    const imoveis = window.imoveis || [];
+    // Imóveis arquivados ou na lixeira continuam no data.js (para o Admin),
+    // mas nunca aparecem no site.
+    const imoveis = (window.imoveis || []).filter(imovel => !imovel.arquivado && !imovel.lixeira);
 
     function initFirstVisitWelcome() {
       const intro = document.getElementById('first-visit-intro');
@@ -2747,10 +2905,12 @@
       { nome: 'Exclusividade', icon: 'lucide:star' },
       { nome: 'Alto Padrão', icon: 'lucide:crown' },
       { nome: 'Locação', icon: 'lucide:key-round' },
+      { nome: 'Venda', icon: 'lucide:handshake' },
       { nome: 'Oportunidade', icon: 'lucide:trending-up' },
       { nome: 'Comercial', icon: 'lucide:building-2' },
       { nome: 'Mobiliado', icon: 'lucide:sofa' },
       { nome: 'Lançamento', icon: 'lucide:rocket' },
+      { nome: 'Quadra mar', icon: 'lucide:sailboat' },
       { nome: 'Frente Mar', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 80 80"><path d="M0 0h80v80H0z" fill="none" /><path fill="currentColor" d="m13 19.5l2.121 2.122zm-.515.515l-2.121-2.121zM14.5 18l2.121 2.122zm-1 1l-2.121-2.121zM4 20.53a3 3 0 1 0 0 6zm15.515-.515l2.121-2.122zM37 19.5l2.121 2.122zm-.515.515l-2.121-2.122zM38.5 18l2.121 2.122zm-1 1l-2.121-2.121zm6.015 1.015l-2.122 2.121zM61 19.5l2.121 2.122zm-.515.515l-2.121-2.122zM62.5 18l2.121 2.122zm-1 1l-2.121-2.121zm6.015 1.015l2.121-2.122zM76 26.53a3 3 0 0 0 0-6zM65 17.5l2.121-2.121zm-24 0l2.121-2.121zm-30.121-.121l-.515.515l4.243 4.242l.514-.514zm2-2l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zM4 26.529c3.834 0 7.678-1.465 10.607-4.393l-4.243-4.242A8.96 8.96 0 0 1 4 20.53zm17.636-8.635l-2.515-2.515l-4.242 4.243l2.514 2.514zm13.243-.515l-.515.514l4.243 4.243l.514-.514zm2-2l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zm-17.986 5.257c5.858 5.858 15.356 5.858 21.214 0l-4.243-4.242a9 9 0 0 1-12.728 0zm28.243-4.242l-2.515-2.515l-4.242 4.243l2.514 2.514zm13.243-.515l-.515.514l4.243 4.243l.514-.514zm2-2l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zm-17.986 5.257c5.858 5.858 15.356 5.858 21.214 0l-4.243-4.242a9 9 0 0 1-12.728 0zm28.243-4.242l-2.515-2.515l-4.242 4.243l2.514 2.514zm-4.243 4.242A14.96 14.96 0 0 0 76 26.53v-6a8.96 8.96 0 0 1-6.364-2.637zm-.272-2.514a1.586 1.586 0 0 1-2.242 0l4.242-4.243a4.414 4.414 0 0 0-6.242 0zm-24 0a1.586 1.586 0 0 1-2.242 0l4.242-4.243a4.414 4.414 0 0 0-6.242 0zm-24 0a1.586 1.586 0 0 1-2.242 0l4.242-4.243a4.414 4.414 0 0 0-6.242 0zM13 33.229l2.121 2.121zm-.515.514l-2.121-2.12zM14.5 31.73l2.121 2.121zm-1 1l-2.121-2.122zM4 34.259a3 3 0 0 0 0 6zm15.515-.516l2.121-2.12zM37 33.23l2.121 2.121zm-.515.514l-2.121-2.12zM38.5 31.73l2.121 2.121zm-1 1l-2.121-2.122zm6.015 1.014l-2.122 2.122zM61 33.23l2.121 2.121zm-.515.514l-2.121-2.12zM62.5 31.73l2.121 2.121zm-1 1l-2.121-2.122zm6.015 1.014l2.121-2.12zM76 40.258a3 3 0 1 0 0-6zm-11-9.03l2.121-2.12zm-24 0l2.121-2.12zm-30.121-.12l-.515.514l4.243 4.243l.514-.515zm2-2l-.5.5l4.242 4.242l.5-.5zm-.5.5l-.5.5l4.242 4.242l.5-.5zm-.5.5l-.5.5l4.242 4.242l.5-.5zm-.5.5l-.5.5l4.242 4.242l.5-.5zM4 40.257c3.834 0 7.678-1.465 10.607-4.393l-4.243-4.243A8.96 8.96 0 0 1 4 34.258zm17.636-8.636l-2.515-2.515l-4.242 4.243l2.514 2.515zm13.243-.515l-.515.515l4.243 4.243l.514-.515zm2-2l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zm-17.986 5.258c5.858 5.858 15.356 5.858 21.214 0l-4.243-4.243a9 9 0 0 1-12.728 0zm28.243-4.243l-2.515-2.515l-4.242 4.243l2.514 2.515zm13.243-.515l-.515.515l4.243 4.243l.514-.515zm2-2l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zm-17.986 5.258c5.858 5.858 15.356 5.858 21.214 0l-4.243-4.243a9 9 0 0 1-12.728 0zm28.243-4.243l-2.515-2.515l-4.242 4.243l2.514 2.515zm-4.243 4.243A14.96 14.96 0 0 0 76 40.258v-6a8.96 8.96 0 0 1-6.364-2.636zm-.272-2.515c-.619.62-1.623.62-2.242 0l4.242-4.243a4.414 4.414 0 0 0-6.242 0zm-24 0c-.619.62-1.623.62-2.242 0l4.242-4.243a4.414 4.414 0 0 0-6.242 0zm-24 0c-.619.62-1.623.62-2.242 0l4.242-4.243a4.414 4.414 0 0 0-6.242 0zM13 46.957l2.121 2.121zm-.515.515l-2.121-2.121zm2.015-2.015l2.121 2.121zm-1 1l-2.121-2.121zM4 47.987a3 3 0 0 0 0 6zm15.515-.515l2.121-2.121zM37 46.957l2.121 2.121zm-.515.515l-2.121-2.121zm2.015-2.015l2.121 2.121zm-1 1l-2.121-2.121zm6.015 1.015l-2.122 2.121zM61 46.957l2.121 2.121zm-.515.515l-2.121-2.121zm2.015-2.015l2.121 2.121zm-1 1l-2.121-2.121zm6.015 1.015l2.121-2.121zM76 53.987a3 3 0 1 0 0-6zm-11-9.03l2.121-2.121zm-24 0l2.121-2.121zm-30.121-.121l-.515.515l4.243 4.242l.514-.515zm2-2l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zM4 53.986c3.834 0 7.678-1.464 10.607-4.393l-4.243-4.242A8.96 8.96 0 0 1 4 47.987zm17.636-8.635l-2.515-2.515l-4.242 4.243l2.514 2.514zm13.243-.515l-.515.515l4.243 4.242l.514-.515zm2-2l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zm-17.986 5.257c5.858 5.858 15.356 5.858 21.214 0l-4.243-4.242a9 9 0 0 1-12.728 0zm28.243-4.242l-2.515-2.515l-4.242 4.243l2.514 2.514zm13.243-.515l-.515.515l4.243 4.242l.514-.515zm2-2l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zm-17.986 5.257c5.858 5.858 15.356 5.858 21.214 0l-4.243-4.242a9 9 0 0 1-12.728 0zm28.243-4.242l-2.515-2.515l-4.242 4.243l2.514 2.514zm-4.243 4.242A14.96 14.96 0 0 0 76 53.987v-6a8.96 8.96 0 0 1-6.364-2.636zm-.272-2.515c-.619.62-1.623.62-2.242 0l4.242-4.242a4.414 4.414 0 0 0-6.242 0zm-24 0c-.619.62-1.623.62-2.242 0l4.242-4.242a4.414 4.414 0 0 0-6.242 0zm-24 0c-.619.62-1.623.62-2.242 0l4.242-4.242a4.414 4.414 0 0 0-6.242 0zM13 60.686l2.121 2.121zm-.515.514l-2.121-2.12zm2.015-2.014l2.121 2.121zm-1 1l-2.121-2.122zM4 61.716a3 3 0 0 0 0 6zm15.515-.516l2.121-2.12zM37 60.686l2.121 2.121zm-.515.514l-2.121-2.12zm2.015-2.014l2.121 2.121zm-1 1l-2.121-2.122zm6.015 1.014l-2.122 2.122zM61 60.686l2.121 2.121zm-.515.514l-2.121-2.12zm2.015-2.014l2.121 2.121zm-1 1l-2.121-2.122zm6.015 1.014l2.121-2.12zM76 67.715a3 3 0 1 0 0-6zm-11-9.03l2.121-2.12zm-24 0l2.121-2.12zm-30.121-.12l-.515.514l4.243 4.243l.514-.515zm2-2l-.5.5l4.242 4.242l.5-.5zm-.5.5l-.5.5l4.242 4.242l.5-.5zm-.5.5l-.5.5l4.242 4.242l.5-.5zm-.5.5l-.5.5l4.242 4.242l.5-.5zM4 67.714c3.834 0 7.678-1.465 10.607-4.393l-4.243-4.243A8.96 8.96 0 0 1 4 61.715zm17.636-8.636l-2.515-2.515l-4.242 4.243l2.514 2.515zm13.243-.515l-.515.515l4.243 4.243l.514-.515zm2-2l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zm-17.986 5.258c5.858 5.858 15.356 5.858 21.214 0l-4.243-4.243a9 9 0 0 1-12.728 0zm28.243-4.243l-2.515-2.515l-4.242 4.243l2.514 2.515zm13.243-.515l-.515.515l4.243 4.243l.514-.515zm2-2l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zm-17.986 5.258c5.858 5.858 15.356 5.858 21.214 0l-4.243-4.243a9 9 0 0 1-12.728 0zm28.243-4.243l-2.515-2.515l-4.242 4.243l2.514 2.515zm-4.243 4.243A14.96 14.96 0 0 0 76 67.715v-6a8.96 8.96 0 0 1-6.364-2.636zm-.272-2.515c-.619.62-1.623.62-2.242 0l4.242-4.243a4.414 4.414 0 0 0-6.242 0zm-24 0c-.619.62-1.623.62-2.242 0l4.242-4.243a4.414 4.414 0 0 0-6.242 0zm-24 0c-.619.62-1.623.62-2.242 0l4.242-4.243a4.414 4.414 0 0 0-6.242 0z" /></svg>' },
       { nome: 'Decorado', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 14 14"><path d="M0 0h14v14H0z" fill="none" /><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 13.5h11a1 1 0 0 0 1-1v-11a1 1 0 0 0-1-1h-11a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1" /><path d="M10 6.5a3 3 0 1 1-6 0V4.31a.5.5 0 0 1 .72-.45L7 5l2.28-1.14a.5.5 0 0 1 .72.45zm-3 3v4m0 0L9.5 11M7 13.5L4.5 11" /></g></svg>' }
     ];
@@ -2787,6 +2947,8 @@
     const grid = document.getElementById('properties-grid');
     const filterTipo = document.getElementById('filter-tipo');
     const filterFinalidade = document.getElementById('filter-finalidade');
+    const filterCidade = document.getElementById('filter-cidade');
+    const filterQuartos = document.getElementById('filter-quartos');
     const filterBusca = document.getElementById('filter-busca');
     const filterBanheiros = document.getElementById('filter-banheiros');
     const filterVagas = document.getElementById('filter-vagas');
@@ -2857,6 +3019,44 @@
 
     function getBadges(imovel) {
       return imovel.badges ? imovel.badges : (imovel.badge ? [imovel.badge] : []);
+    }
+
+    function appendSelectOptions(inputId, valores) {
+      const menu = document.querySelector(`.site-select[data-select="${inputId}"] .site-select-menu`);
+      if (!menu) return;
+      valores.forEach(valor => {
+        const option = document.createElement('button');
+        option.type = 'button';
+        option.className = 'site-select-option';
+        option.dataset.value = valor;
+        option.dataset.label = valor;
+        option.textContent = valor;
+        menu.appendChild(option);
+      });
+    }
+
+    function populateTipoOptions() {
+      const tipos = [...new Set(imoveis.map(imovel => imovel.tipo).filter(Boolean))]
+        .sort((a, b) => a.localeCompare(b, 'pt-BR'));
+      appendSelectOptions('filter-tipo', tipos);
+    }
+
+    function populateCidadeOptions() {
+      const cidades = [...new Set(imoveis.map(imovel => (imovel.cidade || '').trim()).filter(Boolean))]
+        .sort((a, b) => a.localeCompare(b, 'pt-BR'));
+      appendSelectOptions('filter-cidade', cidades);
+    }
+
+    function initAdvancedFilters() {
+      const bar = document.getElementById('filter-bar');
+      const toggle = document.getElementById('filter-advanced-toggle');
+      if (!bar || !toggle) return;
+
+      toggle.addEventListener('click', () => {
+        const isOpen = bar.classList.toggle('advanced-open');
+        toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        if (!isOpen) closeSiteSelects();
+      });
     }
 
     function populateCaracteristicaOptions() {
@@ -3068,6 +3268,8 @@
       const params = new URLSearchParams();
       if (filterTipo.value) params.set('tipo', filterTipo.value);
       if (filterFinalidade.value) params.set('finalidade', filterFinalidade.value);
+      if (filterCidade.value) params.set('cidade', filterCidade.value);
+      if (filterQuartos.value) params.set('quartos', filterQuartos.value);
       if (filterBusca.value.trim()) params.set('busca', filterBusca.value.trim());
       if (filterBanheiros.value) params.set('banheiros', filterBanheiros.value);
       if (filterVagas.value) params.set('vagas', filterVagas.value);
@@ -3096,8 +3298,11 @@
     }
 
     // Inicialização
+    populateTipoOptions();
+    populateCidadeOptions();
     populateCaracteristicaOptions();
     initSiteSelects();
+    initAdvancedFilters();
 
     // Em Destaque: os 6 primeiros imóveis cadastrados no admin (não-padrão);
     // vagas restantes ficam com um fallback vazio até serem cadastrados
