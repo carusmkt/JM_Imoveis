@@ -295,10 +295,6 @@
       box-shadow: var(--shadow-soft);
     }
 
-    .search-command {
-      margin-bottom: 2.25rem;
-    }
-
     .search-command input {
       font-size: 1.08rem;
       padding: 14px 0;
@@ -309,6 +305,79 @@
       grid-template-columns: repeat(4, minmax(150px, 1fr));
       gap: 1.7rem 2rem;
       align-items: end;
+    }
+
+    /* Filtros avançados: display:none em vez de max-height para não recortar dropdowns */
+    .filter-advanced {
+      display: none;
+    }
+
+    .search-panel.advanced-open .filter-advanced {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(150px, 1fr));
+      gap: 1.7rem 2rem;
+      align-items: end;
+      margin-top: 1.75rem;
+      padding-top: 1.75rem;
+      border-top: 1px solid var(--color-khaki);
+      animation: filter-advanced-in 0.32s ease both;
+    }
+
+    @keyframes filter-advanced-in {
+      from {
+        opacity: 0;
+        transform: translateY(-6px);
+      }
+
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .search-panel.advanced-open .filter-advanced {
+        animation: none;
+      }
+    }
+
+    .filter-advanced-toggle {
+      display: flex;
+      width: fit-content;
+      align-items: center;
+      gap: 8px;
+      margin: 1.75rem auto 0;
+      background: transparent;
+      border: 1px solid var(--color-khaki);
+      color: var(--color-leather);
+      font-family: var(--font-main);
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 10px 22px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .filter-advanced-toggle:hover,
+    .filter-advanced-toggle:focus-visible {
+      background: var(--color-leather);
+      color: var(--color-pearl);
+      border-color: var(--color-leather);
+    }
+
+    .filter-advanced-toggle iconify-icon {
+      font-size: 1.05rem;
+    }
+
+    .filter-advanced-toggle .toggle-chevron {
+      transition: transform 0.25s ease;
+    }
+
+    .search-panel.advanced-open .filter-advanced-toggle .toggle-chevron {
+      transform: rotate(180deg);
     }
 
     .filter-wide {
@@ -590,8 +659,9 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: var(--color-leather);
-      color: var(--color-pearl);
+      /* Cores fixas: texto sempre branco sobre fundo escuro, nos dois temas */
+      background: #262626;
+      color: #fff;
       text-align: center;
       padding: 1.5rem;
     }
@@ -619,7 +689,7 @@
       align-items: center;
       gap: 8px;
       padding: 10px 22px;
-      border: 1px solid var(--color-pearl);
+      border: 1px solid #fff;
       border-radius: 999px;
       font-size: 0.8rem;
       font-weight: 600;
@@ -629,8 +699,8 @@
     }
 
     .carousel-saibamais:hover .carousel-saibamais-btn {
-      background: var(--color-pearl);
-      color: var(--color-leather);
+      background: #fff;
+      color: #262626;
     }
 
     .carousel-nav {
@@ -676,7 +746,10 @@
       left: 50%;
       transform: translateX(-50%);
       display: flex;
-      gap: 6px;
+      flex-wrap: wrap;
+      justify-content: center;
+      max-width: calc(100% - 100px);
+      gap: 5px;
       z-index: 3;
     }
 
@@ -705,11 +778,11 @@
 
     .card-badges {
       position: absolute;
-      top: 20px;
-      left: 20px;
+      top: 16px;
+      left: 16px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 6px;
       z-index: 2;
       opacity: 1;
       transform: translateY(0) scale(1);
@@ -740,6 +813,19 @@
     .card-badge svg {
       font-size: 1.05rem;
       color: var(--color-khaki);
+    }
+
+    /* Etiquetas menores no preview do card (o modal mantém o tamanho padrão) */
+    .card-img .card-badge {
+      padding: 3px 9px;
+      font-size: 0.62rem;
+      gap: 4px;
+      letter-spacing: 0.2px;
+    }
+
+    .card-img .card-badge iconify-icon,
+    .card-img .card-badge svg {
+      font-size: 0.82rem;
     }
 
     .card-content {
@@ -1745,7 +1831,8 @@
     }
 
     @media (max-width: 992px) {
-      .filter-workbench {
+      .filter-workbench,
+      .search-panel.advanced-open .filter-advanced {
         grid-template-columns: repeat(2, minmax(160px, 1fr));
       }
 
@@ -1784,6 +1871,7 @@
       }
 
       .filter-workbench,
+      .search-panel.advanced-open .filter-advanced,
       .price-filter,
       .filter-actions,
       .grid {
@@ -1843,13 +1931,26 @@
   </section>
 
   <main class="search-wrap">
-    <section class="search-panel" aria-label="Filtros de busca">
-      <div class="filter-group search-command">
-        <label for="filter-busca">Busca livre</label>
-        <input type="text" id="filter-busca" placeholder="Cidade, bairro, condomínio, construtora ou código">
-      </div>
-
+    <section class="search-panel" id="search-panel" aria-label="Filtros de busca">
       <div class="filter-workbench">
+        <div class="filter-group">
+          <label for="filter-finalidade">Finalidade</label>
+          <input type="hidden" id="filter-finalidade" value="Compra">
+          <div class="site-select" data-select="filter-finalidade">
+            <button type="button" class="site-select-trigger" aria-haspopup="listbox" aria-expanded="false">
+              <span data-select-label>Venda</span>
+              <iconify-icon icon="mdi:chevron-down"></iconify-icon>
+            </button>
+            <div class="site-select-menu" role="listbox">
+              <button type="button" class="site-select-option selected" data-value="Compra"
+                data-label="Venda">Venda</button>
+              <button type="button" class="site-select-option" data-value="Aluguel"
+                data-label="Aluguel">Aluguel</button>
+              <button type="button" class="site-select-option" data-value="" data-label="Todas">Todas</button>
+            </div>
+          </div>
+        </div>
+
         <div class="filter-group">
           <label for="filter-tipo">Tipo</label>
           <input type="hidden" id="filter-tipo" value="">
@@ -1866,20 +1967,55 @@
         </div>
 
         <div class="filter-group">
-          <label for="filter-finalidade">Finalidade</label>
-          <input type="hidden" id="filter-finalidade" value="">
-          <div class="site-select" data-select="filter-finalidade">
+          <label for="filter-cidade">Cidade</label>
+          <input type="hidden" id="filter-cidade" value="">
+          <div class="site-select" data-select="filter-cidade">
             <button type="button" class="site-select-trigger" aria-haspopup="listbox" aria-expanded="false">
-              <span data-select-label>Todas</span>
+              <span data-select-label>Todas as cidades</span>
               <iconify-icon icon="mdi:chevron-down"></iconify-icon>
             </button>
             <div class="site-select-menu" role="listbox">
-              <button type="button" class="site-select-option selected" data-value="" data-label="Todas">Todas</button>
-              <button type="button" class="site-select-option" data-value="Compra" data-label="Compra">Compra</button>
-              <button type="button" class="site-select-option" data-value="Aluguel"
-                data-label="Aluguel">Aluguel</button>
+              <button type="button" class="site-select-option selected" data-value=""
+                data-label="Todas as cidades">Todas as cidades</button>
             </div>
           </div>
+        </div>
+
+        <div class="filter-group">
+          <label for="filter-quartos">Dormitórios</label>
+          <input type="hidden" id="filter-quartos" value="">
+          <div class="site-select" data-select="filter-quartos">
+            <button type="button" class="site-select-trigger" aria-haspopup="listbox" aria-expanded="false">
+              <span data-select-label>Qualquer</span>
+              <iconify-icon icon="mdi:chevron-down"></iconify-icon>
+            </button>
+            <div class="site-select-menu" role="listbox">
+              <button type="button" class="site-select-option selected" data-value=""
+                data-label="Qualquer">Qualquer</button>
+              <button type="button" class="site-select-option" data-value="1" data-label="1+ dormitório">1+
+                dormitório</button>
+              <button type="button" class="site-select-option" data-value="2" data-label="2+ dormitórios">2+
+                dormitórios</button>
+              <button type="button" class="site-select-option" data-value="3" data-label="3+ dormitórios">3+
+                dormitórios</button>
+              <button type="button" class="site-select-option" data-value="4" data-label="4+ dormitórios">4+
+                dormitórios</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button type="button" class="filter-advanced-toggle" id="filter-advanced-toggle" aria-expanded="false"
+        aria-controls="filter-advanced">
+        <iconify-icon icon="mdi:tune-variant"></iconify-icon>
+        <span>Filtros Avançados</span>
+        <iconify-icon icon="mdi:chevron-down" class="toggle-chevron"></iconify-icon>
+      </button>
+
+      <div class="filter-advanced" id="filter-advanced">
+        <div class="filter-group filter-wide search-command">
+          <label for="filter-busca">Busca livre</label>
+          <input type="text" id="filter-busca" placeholder="Cidade, bairro, condomínio, construtora ou código">
         </div>
 
         <div class="filter-group">
@@ -2118,16 +2254,20 @@
 
   <script>document.write('<script src="data.js?v=' + Date.now() + '"><\/script>');</script>
   <script>
-    const imoveis = window.imoveis || [];
+    // Imóveis arquivados ou na lixeira continuam no data.js (para o Admin),
+    // mas nunca aparecem no site.
+    const imoveis = (window.imoveis || []).filter(imovel => !imovel.arquivado && !imovel.lixeira);
 
     const DEFAULT_BADGES = [
       { nome: 'Exclusividade', icon: 'lucide:star' },
       { nome: 'Alto Padrão', icon: 'lucide:crown' },
       { nome: 'Locação', icon: 'lucide:key-round' },
+      { nome: 'Venda', icon: 'lucide:handshake' },
       { nome: 'Oportunidade', icon: 'lucide:trending-up' },
       { nome: 'Comercial', icon: 'lucide:building-2' },
       { nome: 'Mobiliado', icon: 'lucide:sofa' },
       { nome: 'Lançamento', icon: 'lucide:rocket' },
+      { nome: 'Quadra mar', icon: 'lucide:sailboat' },
       { nome: 'Frente Mar', icon: 'lucide:waves' },
       { nome: 'Decorado', icon: 'lucide:badge-check' }
     ];
@@ -2169,6 +2309,8 @@
     const resultsCount = document.getElementById('results-count');
     const filterTipo = document.getElementById('filter-tipo');
     const filterFinalidade = document.getElementById('filter-finalidade');
+    const filterCidade = document.getElementById('filter-cidade');
+    const filterQuartos = document.getElementById('filter-quartos');
     const filterBusca = document.getElementById('filter-busca');
     const filterBanheiros = document.getElementById('filter-banheiros');
     const filterVagas = document.getElementById('filter-vagas');
@@ -2273,19 +2415,46 @@
       return value === wanted;
     }
 
-    function populateTipoOptions() {
-      const tipos = [...new Set(imoveis.map(imovel => imovel.tipo).filter(Boolean))].sort();
-      const tipoSelect = document.querySelector('.site-select[data-select="filter-tipo"] .site-select-menu');
-      if (!tipoSelect) return;
-      tipos.forEach(tipo => {
+    function appendSelectOptions(inputId, valores) {
+      const menu = document.querySelector(`.site-select[data-select="${inputId}"] .site-select-menu`);
+      if (!menu) return;
+      valores.forEach(valor => {
         const option = document.createElement('button');
         option.type = 'button';
         option.className = 'site-select-option';
-        option.dataset.value = tipo;
-        option.dataset.label = tipo;
-        option.textContent = tipo;
-        tipoSelect.appendChild(option);
+        option.dataset.value = valor;
+        option.dataset.label = valor;
+        option.textContent = valor;
+        menu.appendChild(option);
       });
+    }
+
+    function populateTipoOptions() {
+      const tipos = [...new Set(imoveis.map(imovel => imovel.tipo).filter(Boolean))]
+        .sort((a, b) => a.localeCompare(b, 'pt-BR'));
+      appendSelectOptions('filter-tipo', tipos);
+    }
+
+    function populateCidadeOptions() {
+      const cidades = [...new Set(imoveis.map(imovel => (imovel.cidade || '').trim()).filter(Boolean))]
+        .sort((a, b) => a.localeCompare(b, 'pt-BR'));
+      appendSelectOptions('filter-cidade', cidades);
+    }
+
+    function setAdvancedOpen(open) {
+      const panel = document.getElementById('search-panel');
+      const toggle = document.getElementById('filter-advanced-toggle');
+      if (!panel || !toggle) return;
+      panel.classList.toggle('advanced-open', open);
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if (!open) closeSiteSelects();
+    }
+
+    function initAdvancedFilters() {
+      const panel = document.getElementById('search-panel');
+      const toggle = document.getElementById('filter-advanced-toggle');
+      if (!panel || !toggle) return;
+      toggle.addEventListener('click', () => setAdvancedOpen(!panel.classList.contains('advanced-open')));
     }
 
     function getBadges(imovel) {
@@ -2315,6 +2484,7 @@
     function getSearchText(imovel) {
       return [
         imovel.id,
+        imovel.codigo,
         imovel.nome,
         imovel.construtora,
         imovel.localizacao,
@@ -2489,6 +2659,8 @@
     function filterProperties() {
       const tipoVal = filterTipo.value.toLowerCase();
       const finalidadeVal = filterFinalidade.value;
+      const cidadeVal = filterCidade.value.trim().toLowerCase();
+      const quartosVal = Number(filterQuartos.value || 0);
       const buscaVal = filterBusca.value.trim().toLowerCase();
       const banheirosVal = Number(filterBanheiros.value || 0);
       const vagasVal = Number(filterVagas.value || 0);
@@ -2500,12 +2672,15 @@
         const price = parsePrice(imovel.preco);
         const matchTipo = !tipoVal || String(imovel.tipo || '').toLowerCase() === tipoVal;
         const matchFinalidade = matchesFinalidade(imovel, finalidadeVal);
+        const matchCidade = !cidadeVal || String(imovel.cidade || '').trim().toLowerCase() === cidadeVal;
+        const matchQuartos = !quartosVal || Number(imovel.quartos || 0) >= quartosVal;
         const matchBusca = !buscaVal || getSearchText(imovel).includes(buscaVal);
         const matchBanheiros = !banheirosVal || getBathroomCount(imovel) >= banheirosVal;
         const matchVagas = !vagasVal || Number(imovel.vagas || 0) >= vagasVal;
         const matchCaracteristica = !caracteristicaVal || getBadges(imovel).includes(caracteristicaVal);
         const matchPrice = (!minVal || price >= minVal) && (!maxVal || price <= maxVal);
-        return matchTipo && matchFinalidade && matchBusca && matchBanheiros && matchVagas && matchCaracteristica && matchPrice;
+        return matchTipo && matchFinalidade && matchCidade && matchQuartos && matchBusca
+          && matchBanheiros && matchVagas && matchCaracteristica && matchPrice;
       });
 
       renderCards(filtered);
@@ -2515,6 +2690,8 @@
       const params = new URLSearchParams(window.location.search);
       if (params.get('tipo')) filterTipo.value = params.get('tipo');
       if (params.get('finalidade')) filterFinalidade.value = params.get('finalidade');
+      if (params.get('cidade')) filterCidade.value = params.get('cidade');
+      if (params.get('quartos')) filterQuartos.value = params.get('quartos');
       if (params.get('busca')) filterBusca.value = params.get('busca');
       if (params.get('banheiros')) filterBanheiros.value = params.get('banheiros');
       if (params.get('vagas')) filterVagas.value = params.get('vagas');
@@ -2523,12 +2700,19 @@
       if (params.get('precoMax')) priceMax.value = params.get('precoMax');
       syncSiteSelect('filter-tipo', false);
       syncSiteSelect('filter-finalidade', false);
+      syncSiteSelect('filter-cidade', false);
+      syncSiteSelect('filter-quartos', false);
       syncSiteSelect('filter-banheiros', false);
       syncSiteSelect('filter-vagas', false);
       syncSiteSelect('filter-caracteristica', false);
+
+      // Se algum filtro avançado veio na URL, já abre o painel para o usuário enxergá-lo
+      const temFiltroAvancado = ['busca', 'banheiros', 'vagas', 'caracteristica', 'precoMin', 'precoMax']
+        .some(chave => params.get(chave));
+      if (temFiltroAvancado) setAdvancedOpen(true);
     }
 
-    [filterTipo, filterFinalidade, filterBusca, filterBanheiros, filterVagas, filterCaracteristica, priceMin, priceMax].forEach(el => {
+    [filterTipo, filterFinalidade, filterCidade, filterQuartos, filterBusca, filterBanheiros, filterVagas, filterCaracteristica, priceMin, priceMax].forEach(el => {
       const eventName = el.tagName === 'INPUT' ? 'input' : 'change';
       el.addEventListener(eventName, filterProperties);
     });
@@ -2544,7 +2728,9 @@
     }
     document.getElementById('clear-filters').addEventListener('click', () => {
       filterTipo.value = '';
-      filterFinalidade.value = '';
+      filterFinalidade.value = 'Compra'; // volta ao padrão "Venda", não a "Todas"
+      filterCidade.value = '';
+      filterQuartos.value = '';
       filterBusca.value = '';
       filterBanheiros.value = '';
       filterVagas.value = '';
@@ -2553,6 +2739,8 @@
       priceMax.value = '';
       syncSiteSelect('filter-tipo', false);
       syncSiteSelect('filter-finalidade', false);
+      syncSiteSelect('filter-cidade', false);
+      syncSiteSelect('filter-quartos', false);
       syncSiteSelect('filter-banheiros', false);
       syncSiteSelect('filter-vagas', false);
       syncSiteSelect('filter-caracteristica', false);
@@ -2924,8 +3112,10 @@
     });
 
     populateTipoOptions();
+    populateCidadeOptions();
     populateCaracteristicaOptions();
     initSiteSelects();
+    initAdvancedFilters();
     applyQueryParams();
     filterProperties();
 
