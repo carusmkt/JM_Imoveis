@@ -1019,6 +1019,11 @@
       border-radius: 14px;
     }
 
+    /* O card inteiro abre o imóvel */
+    .card[data-id] {
+      cursor: pointer;
+    }
+
     .card:hover {
       transform: translateY(-5px);
       box-shadow: 0 15px 40px rgba(38, 38, 38, 0.08);
@@ -3149,15 +3154,19 @@
       if (carousel) cardCarouselGoTo(carousel, Number(carousel.dataset.index) + dir);
     };
 
-    // Clique na foto abre o imóvel; suporta arrastar (swipe) no touch
+    // Clique em qualquer ponto do card abre o imóvel; suporta arrastar (swipe) no touch
     function initCardInteractions(container) {
       container.addEventListener('click', (e) => {
-        if (e.target.closest('.carousel-nav')) return;
-        const slide = e.target.closest('.carousel-slide');
-        if (!slide) return;
-        const carousel = slide.closest('.card-carousel');
-        if (!carousel || carousel._swiped) return;
-        openImovel(Number(carousel.dataset.id));
+        // Setas do carrossel e links próprios mantêm o comportamento original
+        if (e.target.closest('.carousel-nav, a')) return;
+        const card = e.target.closest('.card[data-id]');
+        if (!card) return;
+        // Não navega quando o clique só finalizou uma seleção de texto
+        const sel = window.getSelection();
+        if (sel && !sel.isCollapsed && sel.toString().trim()) return;
+        const carousel = card.querySelector('.card-carousel');
+        if (carousel && carousel._swiped) return;
+        openImovel(Number(card.dataset.id));
       });
 
       let startX = 0, startY = 0, activeCar = null, swiping = false;
@@ -3220,6 +3229,7 @@
         }
 
         card.className = 'card';
+        card.dataset.id = imovel.id;
 
         const featuresHTML = renderFeaturesHTML(imovel, 'feature');
 
@@ -3257,7 +3267,7 @@
             <div class="card-features">
               ${featuresHTML}
             </div>
-            <button class="card-btn" onclick="openImovel(${imovel.id})">SAIBA MAIS</button>
+            <button type="button" class="card-btn">SAIBA MAIS</button>
           </div>
         `;
         grid.appendChild(card);
