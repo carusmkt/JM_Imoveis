@@ -1286,10 +1286,16 @@
       }).join('');
     }
 
+    // O código do imóvel é o próprio id, guardado já no formato "0001".
+    // Aceita também um número solto (1) ou id antigo, normalizando para o formato.
+    function formatId(id) {
+      return String(id ?? '').padStart(4, '0');
+    }
+
     const main = document.getElementById('property-main');
     const params = new URLSearchParams(window.location.search);
-    const id = Number(params.get('id'));
-    const imovel = imoveis.find(i => i.id === id);
+    const id = formatId(params.get('id'));
+    const imovel = imoveis.find(i => formatId(i.id) === id);
 
     let galleryImgs = [];
     let galleryTags = [];
@@ -1764,9 +1770,9 @@
       const statsHTML = renderFeaturesHTML(imovel, 'property-stat');
 
       // Link canônico do imóvel, pronto para copiar e compartilhar
-      const imovelUrl = new URL('imovel.html?id=' + imovel.id, window.location.href).href;
+      const imovelUrl = new URL('imovel.html?id=' + formatId(imovel.id), window.location.href).href;
 
-      const whatsappText = encodeURIComponent(`Olá, gostaria de saber mais sobre o imóvel: ${imovel.nome} (cód. ${imovel.codigo || imovel.id}) - ${imovel.localizacao}.\n${imovelUrl}`);
+      const whatsappText = encodeURIComponent(`Olá, gostaria de saber mais sobre o imóvel: ${imovel.nome} (cód. ${formatId(imovel.id)}) - ${imovel.localizacao}.\n${imovelUrl}`);
       const embedUrl = youtubeEmbedUrl(imovel.youtube);
       currentVideoEmbedUrl = embedUrl || '';
 
@@ -1870,7 +1876,7 @@
           <div class="property-ref">
             <div class="property-ref-item">
               <span class="property-ref-label">Código</span>
-              <span class="property-ref-value" id="property-code">${imovel.codigo || imovel.id}</span>
+              <span class="property-ref-value" id="property-code">${formatId(imovel.id)}</span>
               <button type="button" class="property-ref-btn" onclick="copyRef('property-code', this)"
                 aria-label="Copiar código do imóvel">
                 <iconify-icon icon="mdi:content-copy"></iconify-icon> Copiar

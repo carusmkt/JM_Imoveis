@@ -1,6 +1,6 @@
 window.imoveis = [
   {
-    "id": 1783461764290,
+    "id": "0001",
     "nome": "Horizon",
     "construtora": "FG",
     "localizacao": "Centro, Balneário Camboriú",
@@ -93,7 +93,7 @@ window.imoveis = [
     "descricaoMarkdown": "Apartamento **garden** em andar alto, mobiliado e decorado com **três suítes**, living integrado, cozinha equipada, churrasqueira a gás, terraço privativo parcialmente coberto e vista para o mar. O Horizon Residence oferece **lazer completo**, com piscinas, academia, spa, salão de festas, cinema, brinquedoteca, quadra poliesportiva e portaria 24 horas."
   },
   {
-    "id": 1783462384382,
+    "id": "0002",
     "nome": "Iconic Tower",
     "construtora": "FG",
     "localizacao": "Centro, Balneário Camboriú",
@@ -184,7 +184,7 @@ window.imoveis = [
     "descricaoMarkdown": ""
   },
   {
-    "id": 1784305575110,
+    "id": "0003",
     "nome": "Torre de Málaga",
     "construtora": "Fórmula",
     "localizacao": "Pioneiros, Balneário Camboriú",
@@ -361,7 +361,7 @@ window.imoveis = [
     "descricaoMarkdown": "Apartamento mobiliado para aluguel no bairro Pioneiros, em Balneário Camboriú, com 130 m², três suítes, quatro banheiros, duas vagas e vista para o mar. \nO imóvel fica no 12º andar, possui ambientes integrados, porcelanato, ar-condicionado, banheira, varanda gourmet com churrasqueira e aceita animais. O condomínio conta com piscina, academia, espaço gourmet, brinquedoteca e salão de festas."
   },
   {
-    "id": 1785789987920,
+    "id": "0004",
     "nome": "The Place",
     "construtora": "Embraed",
     "localizacao": "Centro, Balneário Camboriú",
@@ -512,7 +512,7 @@ window.imoveis = [
     "descricaoMarkdown": "Viva com conforto e sofisticação no Edifício The Place Central Residence, um empreendimento de alto padrão da Embraed localizado no Centro de Balneário Camboriú.\n\n:icon[lucide:sofa]: Totalmente mobiliado\n:icon[lucide:ruler]: 142 m² de área privativas\n:icon[lucide:bed]: três suítes, incluindo uma suíte master com banheira de hidromassagem, além de lavabo, cozinha planejada, área de serviço e três vagas de garagem.\n\nA área social integra sala de estar, sala de jantar e sacada, criando um ambiente acolhedor para receber familiares e amigos. O espaço grill e a vista panorâmica para o mar tornam o imóvel ainda mais especial.\n\nO empreendimento oferece uma completa estrutura de lazer: \n:icon[lucide:waves-ladder]: piscinas adulto e infantil\n:icon[lucide:dumbbell]: academia,\n:icon[lucide:wine]: salão de festas, espaço gourmet, salão de jogos, brinquedoteca, playground, cinema, hidromassagem e espelho-d’água.\n\nUma excelente oportunidade para quem procura um apartamento mobiliado, com vista para o mar, infraestrutura completa e o reconhecido padrão construtivo da Embraed em uma das regiões mais valorizadas de Balneário Camboriú.\n\nEntre em contato para obter mais informações e agendar uma visita."
   },
   {
-    "id": 1783465579472,
+    "id": "0005",
     "nome": "Sobrado",
     "construtora": "",
     "localizacao": "Centro, Balneário Camboriú",
@@ -583,7 +583,7 @@ window.imoveis = [
     "descricaoMarkdown": "Sobrado novo em **região central,** com três suítes, banheiro social, ambientes integrados, cozinha americana, pé-direito alto, área de serviço e pátio com churrasqueira a carvão."
   },
   {
-    "id": 1784151435877,
+    "id": "0006",
     "nome": "Boutique 28setenta",
     "construtora": "",
     "localizacao": "Centro, Balneário Camboriú",
@@ -664,7 +664,7 @@ window.imoveis = [
     "descricaoMarkdown": "Apartamento novo no Centro de Balneário Camboriú, com 99 m² de área útil, três dormitórios, uma suíte, dois banheiros e duas vagas. O imóvel fica no 6º andar, possui ambientes integrados, porcelanato, área de serviço, janelas grandes, vista para o mar e está a poucos metros da Avenida Brasil."
   },
   {
-    "id": 1784151907421,
+    "id": "0007",
     "nome": "Residencial Alto da Luz",
     "construtora": "",
     "localizacao": "Nações, Balneário Camboriú",
@@ -795,7 +795,7 @@ window.imoveis = [
     "descricaoMarkdown": "Apartamento novo no Residencial Alto da Luz, no bairro Nações, em Balneário Camboriú, com dois dormitórios, sendo uma suíte, banheiro social, ambientes integrados, porcelanato, boa iluminação, ventilação natural nos banheiros e localização a aproximadamente 750 metros da praia. O condomínio conta com elevador, academia e salão de festas."
   },
   {
-    "id": 1785180400144,
+    "id": "0008",
     "nome": "Green Coast",
     "construtora": "Baggio",
     "localizacao": "Centro, Balneário Camboriú",
@@ -904,7 +904,7 @@ window.imoveis = [
     "descricaoMarkdown": "Praticidade, conforto e localização privilegiada para viver o melhor de Balneário Camboriú!\n\nEste apartamento mobiliado está pronto para receber você, com ambientes amplos e uma estrutura completa para tornar a rotina mais confortável.\n\n:icon[lucide:bed]: 1 suíte e 2 demi-suítes\n:icon[lucide:car]: 2 vagas de garagem\n:icon[lucide:ruler]: 113 m² de área\n:icon[lucide:waves-ladder]:Piscina, academia, espaço gourmet e salão de festas\n\nO imóvel também conta com ar-condicionado, armários planejados, churrasqueira e aceita animais de estimação.\n\n:icon[lucide:map-pin]:Rua 906, Centro — Balneário Camboriú/SC\n**Aluguel:** R$ 10.000/mês\nCondomínio e IPTU isentos."
   },
   {
-    "id": 1785611807403,
+    "id": "0009",
     "nome": "Ap 2 Suítes Praia Brava",
     "construtora": "SBJ Construtora e Incorporadora",
     "localizacao": "Praia Brava de Itajaí, Itajaí",
@@ -1003,7 +1003,7 @@ window.imoveis = [
     "descricaoMarkdown": "Apartamento para Locação Anual 2 Suítes no Edifício Ilha dos Amores Praia Brava Itajaí\n\nO Edifício Ilha dos Amores está localizado em uma região privilegiada, próxima ao mar, restaurantes, comércios e diversas opções de lazer, proporcionando praticidade e qualidade de vida.\n\nCom 75 m² privativos, este apartamento foi planejado para oferecer ambientes funcionais, confortáveis e bem distribuídos. São 2 suítes, além de lavabo, ideal para maior comodidade ao receber familiares e amigos.\n\nA área social conta com living integrado, reunindo sala de estar, sala de jantar, cozinha, espaço gourmet e churrasqueira a carvão, criando um ambiente agradável para o dia a dia e para momentos de convivência. O apartamento dispõe ainda de lavanderia e área de serviço, oferecendo praticidade para a rotina.\n\nO imóvel está mobiliado, decorado e climatizado, pronto para morar, e conta com 2 vagas de garagem, garantindo mais comodidade aos moradores.\n\nO Edifício Ilha dos Amores oferece uma estrutura de lazer e convivência que inclui salão de festas, salão de jogos e espaço gourmet, proporcionando ambientes para entretenimento e momentos especiais com familiares e amigos. O empreendimento também conta com elevador, portaria remota, interfone e câmeras de segurança, oferecendo mais praticidade e tranquilidade aos moradores.\n\nAgende sua visita agora pelo whats (47) 92001-3095\n\nCaracterísticas do imóvel:\n\n75 m² privativos\n2 suítes\nMobiliado, decorado e climatizado\nLavabo\nLiving integrado\nSala de estar\nSala de jantar\nCozinha equipada\nEspaço gourmet\nChurrasqueira a carvão\nLavanderia\nÁrea de serviço\n2 vagas de garagem sendo 1 gaveta\nCaracterísticas do empreendimento:\nSalão de festas\nSalão de jogos\nHall de entrada decorado e mobiliado\nEspaço gourmet\nElevador\nPortaria remota\nInterfone\nCâmeras de segurança\nPortões automáticos\nCondições e disponibilidades sujeitas a alterações sem prévio aviso.\nAluguel: R$ 5.000,00\nCondomínio + IPTU + ambiental: R$1.100,00"
   },
   {
-    "id": 1786101523937,
+    "id": "0010",
     "nome": "Sun Paradise",
     "construtora": "Baggio Empreendimentos",
     "localizacao": "Centro, Balneário Camboriú",
