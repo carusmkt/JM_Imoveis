@@ -1213,31 +1213,40 @@
       return imoveisData.filter(isAtivo);
     }
 
-    // ---- Código do imóvel: 0001, 0002... atribuído uma vez e nunca reaproveitado ----
-    function formatCodigo(numero) {
-      return String(numero).padStart(4, '0');
+    // ---- Código do imóvel ----
+    // O código É o id: existe um só identificador. O id é guardado como número
+    // (1, 2, 3...) e o zero à esquerda é só formatação de exibição.
+    function formatId(id) {
+      return String(id ?? '').padStart(4, '0');
     }
 
-    // O próximo código é sempre maior que qualquer um já usado (inclusive de
-    // arquivados e da lixeira), para que dois imóveis nunca dividam o mesmo código.
-    function proximoCodigoNumero() {
+    // O próximo id é sempre maior que qualquer um já usado (inclusive de arquivados
+    // e da lixeira), para que um código nunca seja reaproveitado.
+    function proximoId() {
       const usados = imoveisData
-        .map(imovel => parseInt(imovel.codigo, 10))
+        .map(imovel => Number(imovel.id))
         .filter(numero => Number.isFinite(numero));
-      return usados.length > 0 ? Math.max(...usados) + 1 : 1;
+      return formatId(usados.length > 0 ? Math.max(...usados) + 1 : 1);
     }
 
-    // Imóveis cadastrados antes desta funcionalidade recebem código na ordem da lista
-    function atribuirCodigosFaltantes() {
-      let proximo = proximoCodigoNumero();
-      let atribuidos = 0;
-      imoveisData.forEach(imovel => {
-        if (!imovel.codigo) {
-          imovel.codigo = formatCodigo(proximo++);
-          atribuidos++;
+    // Cadastros antigos usavam Date.now() como id (13 dígitos). Ao encontrar um
+    // desses, renumera tudo sequencialmente na ordem atual da lista. Ids que já
+    // são sequenciais mas estavam como número (1) viram texto formatado ("0001").
+    const ID_LEGADO_MINIMO = 1000000;
+
+    function migrarIdsSequenciais() {
+      const temTimestamp = imoveisData.some(imovel => Number(imovel.id) >= ID_LEGADO_MINIMO);
+      let ajustados = 0;
+
+      imoveisData.forEach((imovel, indice) => {
+        delete imovel.codigo; // campo separado não existe mais
+        const novo = temTimestamp ? formatId(indice + 1) : formatId(imovel.id);
+        if (imovel.id !== novo) {
+          imovel.id = novo;
+          ajustados++;
         }
       });
-      return atribuidos;
+      return ajustados;
     }
 
     function diasNaLixeira(imovel) {
@@ -1270,15 +1279,15 @@
     if (window.imoveis) {
       imoveisData = JSON.parse(JSON.stringify(window.imoveis)); // Clone profundo
       const expirados = purgarLixeiraExpirada();
-      const novosCodigos = atribuirCodigosFaltantes();
+      const renumerados = migrarIdsSequenciais();
       renderList();
 
       const avisos = [];
       if (expirados > 0) {
         avisos.push(`${expirados} ${expirados === 1 ? 'imóvel foi apagado definitivamente' : 'imóveis foram apagados definitivamente'} após 30 dias na lixeira.`);
       }
-      if (novosCodigos > 0) {
-        avisos.push(`${novosCodigos} ${novosCodigos === 1 ? 'imóvel recebeu código' : 'imóveis receberam código'} pela primeira vez.`);
+      if (renumerados > 0) {
+        avisos.push(`${renumerados} ${renumerados === 1 ? 'imóvel teve o código ajustado' : 'imóveis tiveram o código ajustado'} para o formato 0001.`);
       }
 
       if (avisos.length > 0) {
@@ -1531,29 +1540,29 @@
         if (listView === 'lixeira') {
           const restantes = diasRestantesLixeira(imovel);
           acoesHTML = `
-            <button class="icon-btn" onclick="restoreProperty(${imovel.id})" title="Restaurar"><iconify-icon icon="mdi:restore" style="color: #27ae60;"></iconify-icon></button>
-            <button class="icon-btn" onclick="destroyProperty(${imovel.id})" title="Apagar definitivamente"><iconify-icon icon="mdi:delete-forever" style="color: #e74c3c;"></iconify-icon></button>`;
+            <button class="icon-btn" onclick="restoreProperty('${imovel.id}')" title="Restaurar"><iconify-icon icon="mdi:restore" style="color: #27ae60;"></iconify-icon></button>
+            <button class="icon-btn" onclick="destroyProperty('${imovel.id}')" title="Apagar definitivamente"><iconify-icon icon="mdi:delete-forever" style="color: #e74c3c;"></iconify-icon></button>`;
           expiraHTML = `<div class="list-item-expira"><iconify-icon icon="mdi:clock-alert-outline"></iconify-icon> Apaga definitivamente em ${restantes} ${restantes === 1 ? 'dia' : 'dias'}</div>`;
         } else if (listView === 'arquivados') {
           acoesHTML = `
-            <button class="icon-btn" onclick="unarchiveProperty(${imovel.id})" title="Publicar no site novamente"><iconify-icon icon="mdi:archive-arrow-up-outline" style="color: #27ae60;"></iconify-icon></button>
-            <button class="icon-btn" onclick="duplicateProperty(${imovel.id})" title="Duplicar"><iconify-icon icon="mdi:content-copy"></iconify-icon></button>
-            <button class="icon-btn" onclick="openForm(${imovel.id})" title="Editar"><iconify-icon icon="mdi:pencil"></iconify-icon></button>
-            <button class="icon-btn" onclick="deleteProperty(${imovel.id})" title="Mover para a lixeira"><iconify-icon icon="mdi:delete" style="color: #e74c3c;"></iconify-icon></button>`;
+            <button class="icon-btn" onclick="unarchiveProperty('${imovel.id}')" title="Publicar no site novamente"><iconify-icon icon="mdi:archive-arrow-up-outline" style="color: #27ae60;"></iconify-icon></button>
+            <button class="icon-btn" onclick="duplicateProperty('${imovel.id}')" title="Duplicar"><iconify-icon icon="mdi:content-copy"></iconify-icon></button>
+            <button class="icon-btn" onclick="openForm('${imovel.id}')" title="Editar"><iconify-icon icon="mdi:pencil"></iconify-icon></button>
+            <button class="icon-btn" onclick="deleteProperty('${imovel.id}')" title="Mover para a lixeira"><iconify-icon icon="mdi:delete" style="color: #e74c3c;"></iconify-icon></button>`;
         } else {
           acoesHTML = `
-            <button class="icon-btn" onclick="moveUp(${imovel.id})" title="Mover para cima"><iconify-icon icon="mdi:arrow-up"></iconify-icon></button>
-            <button class="icon-btn" onclick="moveDown(${imovel.id})" title="Mover para baixo"><iconify-icon icon="mdi:arrow-down"></iconify-icon></button>
-            <button class="icon-btn" onclick="duplicateProperty(${imovel.id})" title="Duplicar"><iconify-icon icon="mdi:content-copy"></iconify-icon></button>
-            <button class="icon-btn" onclick="archiveProperty(${imovel.id})" title="Arquivar (sai do site)"><iconify-icon icon="mdi:archive-outline"></iconify-icon></button>
-            <button class="icon-btn" onclick="openForm(${imovel.id})" title="Editar"><iconify-icon icon="mdi:pencil"></iconify-icon></button>
-            <button class="icon-btn" onclick="deleteProperty(${imovel.id})" title="Mover para a lixeira"><iconify-icon icon="mdi:delete" style="color: #e74c3c;"></iconify-icon></button>`;
+            <button class="icon-btn" onclick="moveUp('${imovel.id}')" title="Mover para cima"><iconify-icon icon="mdi:arrow-up"></iconify-icon></button>
+            <button class="icon-btn" onclick="moveDown('${imovel.id}')" title="Mover para baixo"><iconify-icon icon="mdi:arrow-down"></iconify-icon></button>
+            <button class="icon-btn" onclick="duplicateProperty('${imovel.id}')" title="Duplicar"><iconify-icon icon="mdi:content-copy"></iconify-icon></button>
+            <button class="icon-btn" onclick="archiveProperty('${imovel.id}')" title="Arquivar (sai do site)"><iconify-icon icon="mdi:archive-outline"></iconify-icon></button>
+            <button class="icon-btn" onclick="openForm('${imovel.id}')" title="Editar"><iconify-icon icon="mdi:pencil"></iconify-icon></button>
+            <button class="icon-btn" onclick="deleteProperty('${imovel.id}')" title="Mover para a lixeira"><iconify-icon icon="mdi:delete" style="color: #e74c3c;"></iconify-icon></button>`;
         }
 
         item.innerHTML = `
           <img src="${(imovel.imagens && imovel.imagens.length > 0) ? imovel.imagens[0] : imovel.imagem}" class="list-item-img" alt="Foto">
           <div class="list-item-info">
-            <div class="list-item-title">${stateBadge}${imovel.nome} <span style="font-size:0.8rem; font-weight:normal; color:#888;">(Cód. ${imovel.codigo || '—'})</span></div>
+            <div class="list-item-title">${stateBadge}${imovel.nome} <span style="font-size:0.8rem; font-weight:normal; color:#888;">(Cód. ${formatId(imovel.id)})</span></div>
             <div class="list-item-price">${imovel.preco} - ${imovel.localizacao}</div>
             ${expiraHTML}
           </div>
@@ -1592,8 +1601,7 @@
       // Cópia fiel: preserva todas as características e o estado do original,
       // só muda o ID e o nome. Entra logo abaixo do imóvel copiado.
       const copia = JSON.parse(JSON.stringify(imoveisData[index]));
-      copia.id = Date.now();
-      copia.codigo = formatCodigo(proximoCodigoNumero()); // a cópia é outro imóvel: código novo
+      copia.id = proximoId(); // a cópia é outro imóvel: código novo
       copia.nome = `${copia.nome} (cópia)`;
 
       imoveisData.splice(index + 1, 0, copia);
@@ -1735,7 +1743,7 @@
         scrollSensitivity: 80,
         scrollSpeed: 12,
         onEnd: function () {
-          const newOrder = Array.from(grid.children).map(el => Number(el.dataset.id));
+          const newOrder = Array.from(grid.children).map(el => el.dataset.id);
           // Reencaixa os ativos reordenados nas mesmas posições que ocupavam,
           // preservando arquivados e lixeira onde estão.
           const posicoes = [];
@@ -3033,7 +3041,7 @@
 
     function saveProperty() {
       const idVal = document.getElementById('imovel-id').value;
-      const novoId = idVal ? parseInt(idVal) : Date.now();
+      const novoId = idVal ? idVal : proximoId();
 
       const cidade = document.getElementById('f-cidade').value;
       const bairro = document.getElementById('f-bairro').value;
@@ -3086,11 +3094,10 @@
       }
 
       if (idVal) {
-        const index = imoveisData.findIndex(i => i.id === parseInt(idVal));
+        const index = imoveisData.findIndex(i => i.id === idVal);
         if (index > -1) {
           // Editar não muda o estado: arquivado continua arquivado, lixeira continua na lixeira
           const anterior = imoveisData[index];
-          imovel.codigo = anterior.codigo || formatCodigo(proximoCodigoNumero());
           if (anterior.arquivado) {
             imovel.arquivado = true;
             imovel.arquivadoEm = anterior.arquivadoEm;
@@ -3102,7 +3109,6 @@
           imoveisData[index] = imovel;
         }
       } else {
-        imovel.codigo = formatCodigo(proximoCodigoNumero());
         imoveisData.push(imovel);
         listView = 'ativos'; // imóvel novo nasce publicado: mostra a aba onde ele está
       }
