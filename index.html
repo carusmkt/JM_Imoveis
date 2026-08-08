@@ -2944,6 +2944,12 @@
       }).join('');
     }
 
+    // O código do imóvel é o próprio id, guardado já no formato "0001".
+    // Aceita também um número solto (1) ou id antigo, normalizando para o formato.
+    function formatId(id) {
+      return String(id ?? '').padStart(4, '0');
+    }
+
     const grid = document.getElementById('properties-grid');
     const filterTipo = document.getElementById('filter-tipo');
     const filterFinalidade = document.getElementById('filter-finalidade');
@@ -3081,7 +3087,7 @@
 
     // Abre a página do imóvel (substitui o antigo pop-up)
     window.openImovel = function (id) {
-      const url = 'imovel.html?id=' + id;
+      const url = 'imovel.html?id=' + formatId(id);
       if (typeof navigateWithTransition === 'function') navigateWithTransition(url);
       else window.location.href = url;
     };
@@ -3157,7 +3163,7 @@
         if (!slide) return;
         const carousel = slide.closest('.card-carousel');
         if (!carousel || carousel._swiped) return;
-        openImovel(Number(carousel.dataset.id));
+        openImovel(carousel.dataset.id);
       });
 
       let startX = 0, startY = 0, activeCar = null, swiping = false;
@@ -3257,7 +3263,7 @@
             <div class="card-features">
               ${featuresHTML}
             </div>
-            <button class="card-btn" onclick="openImovel(${imovel.id})">SAIBA MAIS</button>
+            <button class="card-btn" onclick="openImovel('${imovel.id}')">SAIBA MAIS</button>
           </div>
         `;
         grid.appendChild(card);
@@ -3494,7 +3500,7 @@
     }
 
     window.openModal = function (id) {
-      const imovel = imoveis.find(i => i.id === id);
+      const imovel = imoveis.find(i => formatId(i.id) === formatId(id));
       if (!imovel) return;
 
       currentModalImovel = imovel;
@@ -3595,7 +3601,7 @@
           ${youtubeBtn}
         </div>
 
-        <a href="imovel.html?id=${imovel.id}" class="modal-more-btn">
+        <a href="imovel.html?id=${formatId(imovel.id)}" class="modal-more-btn">
           MAIS INFORMAÇÕES <iconify-icon icon="mdi:arrow-right"></iconify-icon>
         </a>
       `;
