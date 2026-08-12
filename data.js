@@ -1,6 +1,6 @@
 window.imoveis = [
   {
-    "id": "0001",
+    "id": 1783461764290,
     "nome": "Horizon",
     "construtora": "FG",
     "localizacao": "Centro, Balneário Camboriú",
@@ -93,7 +93,7 @@ window.imoveis = [
     "descricaoMarkdown": "Apartamento **garden** em andar alto, mobiliado e decorado com **três suítes**, living integrado, cozinha equipada, churrasqueira a gás, terraço privativo parcialmente coberto e vista para o mar. O Horizon Residence oferece **lazer completo**, com piscinas, academia, spa, salão de festas, cinema, brinquedoteca, quadra poliesportiva e portaria 24 horas."
   },
   {
-    "id": "0002",
+    "id": 1783462384382,
     "nome": "Iconic Tower",
     "construtora": "FG",
     "localizacao": "Centro, Balneário Camboriú",
@@ -184,7 +184,7 @@ window.imoveis = [
     "descricaoMarkdown": ""
   },
   {
-    "id": "0003",
+    "id": 1784305575110,
     "nome": "Torre de Málaga",
     "construtora": "Fórmula",
     "localizacao": "Pioneiros, Balneário Camboriú",
@@ -361,7 +361,7 @@ window.imoveis = [
     "descricaoMarkdown": "Apartamento mobiliado para aluguel no bairro Pioneiros, em Balneário Camboriú, com 130 m², três suítes, quatro banheiros, duas vagas e vista para o mar. \nO imóvel fica no 12º andar, possui ambientes integrados, porcelanato, ar-condicionado, banheira, varanda gourmet com churrasqueira e aceita animais. O condomínio conta com piscina, academia, espaço gourmet, brinquedoteca e salão de festas."
   },
   {
-    "id": "0004",
+    "id": 1785789987920,
     "nome": "The Place",
     "construtora": "Embraed",
     "localizacao": "Centro, Balneário Camboriú",
@@ -512,7 +512,7 @@ window.imoveis = [
     "descricaoMarkdown": "Viva com conforto e sofisticação no Edifício The Place Central Residence, um empreendimento de alto padrão da Embraed localizado no Centro de Balneário Camboriú.\n\n:icon[lucide:sofa]: Totalmente mobiliado\n:icon[lucide:ruler]: 142 m² de área privativas\n:icon[lucide:bed]: três suítes, incluindo uma suíte master com banheira de hidromassagem, além de lavabo, cozinha planejada, área de serviço e três vagas de garagem.\n\nA área social integra sala de estar, sala de jantar e sacada, criando um ambiente acolhedor para receber familiares e amigos. O espaço grill e a vista panorâmica para o mar tornam o imóvel ainda mais especial.\n\nO empreendimento oferece uma completa estrutura de lazer: \n:icon[lucide:waves-ladder]: piscinas adulto e infantil\n:icon[lucide:dumbbell]: academia,\n:icon[lucide:wine]: salão de festas, espaço gourmet, salão de jogos, brinquedoteca, playground, cinema, hidromassagem e espelho-d’água.\n\nUma excelente oportunidade para quem procura um apartamento mobiliado, com vista para o mar, infraestrutura completa e o reconhecido padrão construtivo da Embraed em uma das regiões mais valorizadas de Balneário Camboriú.\n\nEntre em contato para obter mais informações e agendar uma visita."
   },
   {
-    "id": "0005",
+    "id": 1783465579472,
     "nome": "Sobrado",
     "construtora": "",
     "localizacao": "Centro, Balneário Camboriú",
@@ -583,7 +583,7 @@ window.imoveis = [
     "descricaoMarkdown": "Sobrado novo em **região central,** com três suítes, banheiro social, ambientes integrados, cozinha americana, pé-direito alto, área de serviço e pátio com churrasqueira a carvão."
   },
   {
-    "id": "0006",
+    "id": 1784151435877,
     "nome": "Boutique 28setenta",
     "construtora": "",
     "localizacao": "Centro, Balneário Camboriú",
@@ -664,7 +664,7 @@ window.imoveis = [
     "descricaoMarkdown": "Apartamento novo no Centro de Balneário Camboriú, com 99 m² de área útil, três dormitórios, uma suíte, dois banheiros e duas vagas. O imóvel fica no 6º andar, possui ambientes integrados, porcelanato, área de serviço, janelas grandes, vista para o mar e está a poucos metros da Avenida Brasil."
   },
   {
-    "id": "0007",
+    "id": 1784151907421,
     "nome": "Residencial Alto da Luz",
     "construtora": "",
     "localizacao": "Nações, Balneário Camboriú",
@@ -795,7 +795,7 @@ window.imoveis = [
     "descricaoMarkdown": "Apartamento novo no Residencial Alto da Luz, no bairro Nações, em Balneário Camboriú, com dois dormitórios, sendo uma suíte, banheiro social, ambientes integrados, porcelanato, boa iluminação, ventilação natural nos banheiros e localização a aproximadamente 750 metros da praia. O condomínio conta com elevador, academia e salão de festas."
   },
   {
-    "id": "0008",
+    "id": 1785180400144,
     "nome": "Green Coast",
     "construtora": "Baggio",
     "localizacao": "Centro, Balneário Camboriú",
@@ -904,7 +904,7 @@ window.imoveis = [
     "descricaoMarkdown": "Praticidade, conforto e localização privilegiada para viver o melhor de Balneário Camboriú!\n\nEste apartamento mobiliado está pronto para receber você, com ambientes amplos e uma estrutura completa para tornar a rotina mais confortável.\n\n:icon[lucide:bed]: 1 suíte e 2 demi-suítes\n:icon[lucide:car]: 2 vagas de garagem\n:icon[lucide:ruler]: 113 m² de área\n:icon[lucide:waves-ladder]:Piscina, academia, espaço gourmet e salão de festas\n\nO imóvel também conta com ar-condicionado, armários planejados, churrasqueira e aceita animais de estimação.\n\n:icon[lucide:map-pin]:Rua 906, Centro — Balneário Camboriú/SC\n**Aluguel:** R$ 10.000/mês\nCondomínio e IPTU isentos."
   },
   {
-    "id": "0009",
+    "id": 1785611807403,
     "nome": "Ap 2 Suítes Praia Brava",
     "construtora": "SBJ Construtora e Incorporadora",
     "localizacao": "Praia Brava de Itajaí, Itajaí",
@@ -1003,7 +1003,7 @@ window.imoveis = [
     "descricaoMarkdown": "Apartamento para Locação Anual 2 Suítes no Edifício Ilha dos Amores Praia Brava Itajaí\n\nO Edifício Ilha dos Amores está localizado em uma região privilegiada, próxima ao mar, restaurantes, comércios e diversas opções de lazer, proporcionando praticidade e qualidade de vida.\n\nCom 75 m² privativos, este apartamento foi planejado para oferecer ambientes funcionais, confortáveis e bem distribuídos. São 2 suítes, além de lavabo, ideal para maior comodidade ao receber familiares e amigos.\n\nA área social conta com living integrado, reunindo sala de estar, sala de jantar, cozinha, espaço gourmet e churrasqueira a carvão, criando um ambiente agradável para o dia a dia e para momentos de convivência. O apartamento dispõe ainda de lavanderia e área de serviço, oferecendo praticidade para a rotina.\n\nO imóvel está mobiliado, decorado e climatizado, pronto para morar, e conta com 2 vagas de garagem, garantindo mais comodidade aos moradores.\n\nO Edifício Ilha dos Amores oferece uma estrutura de lazer e convivência que inclui salão de festas, salão de jogos e espaço gourmet, proporcionando ambientes para entretenimento e momentos especiais com familiares e amigos. O empreendimento também conta com elevador, portaria remota, interfone e câmeras de segurança, oferecendo mais praticidade e tranquilidade aos moradores.\n\nAgende sua visita agora pelo whats (47) 92001-3095\n\nCaracterísticas do imóvel:\n\n75 m² privativos\n2 suítes\nMobiliado, decorado e climatizado\nLavabo\nLiving integrado\nSala de estar\nSala de jantar\nCozinha equipada\nEspaço gourmet\nChurrasqueira a carvão\nLavanderia\nÁrea de serviço\n2 vagas de garagem sendo 1 gaveta\nCaracterísticas do empreendimento:\nSalão de festas\nSalão de jogos\nHall de entrada decorado e mobiliado\nEspaço gourmet\nElevador\nPortaria remota\nInterfone\nCâmeras de segurança\nPortões automáticos\nCondições e disponibilidades sujeitas a alterações sem prévio aviso.\nAluguel: R$ 5.000,00\nCondomínio + IPTU + ambiental: R$1.100,00"
   },
   {
-    "id": "0010",
+    "id": 1786101523937,
     "nome": "Sun Paradise",
     "construtora": "Baggio Empreendimentos",
     "localizacao": "Centro, Balneário Camboriú",
@@ -1028,7 +1028,7 @@ window.imoveis = [
     "quartos": 3,
     "suites": 3,
     "banheiros": 3,
-    "vagas": 0,
+    "vagas": 2,
     "areaUtil": "127 m²",
     "areaTotal": "",
     "imagens": [
@@ -1110,15 +1110,37 @@ window.imoveis = [
       ""
     ],
     "imagem": "https://raw.githubusercontent.com/jmimoveis/JM_Imoveis/main/images/1786101523937-1786101536814-0.jpg",
-    "youtube": "",
+    "youtube": "https://youtu.be/7-CtRGvNkpk",
     "badges": [
       "Oportunidade"
     ],
     "destaqueBadge": "",
     "badge": "Oportunidade",
-    "caracteristicas": [],
-    "caracteristicasCondominio": [],
-    "descricao": "",
-    "descricaoMarkdown": ""
+    "caracteristicas": [
+      "Aceita animais",
+      "Cozinha americana",
+      "Churrasqueira a carvão",
+      "Posição solar Norte/Leste",
+      "Novo"
+    ],
+    "caracteristicasCondominio": [
+      "Academia",
+      "Espaço gourmet",
+      "Playground",
+      "Quadra esportiva",
+      "Sala de jogos",
+      "Salão de festas",
+      "Elevador",
+      "Churrasqueira",
+      "Cinema",
+      "Piscina",
+      "Bicicletário",
+      "Sauna",
+      "Câmeras de Segurança",
+      "Portaria 24h",
+      "Reconhecimento facial"
+    ],
+    "descricao": "<p>O apartamento fica em andar alto no Sun Paradise, uma obra da Baggio Empreendimentos entregue em 2024. Possui 127m² de área privativa e 2 apartamentos por andar:</p><p><iconify-icon icon=\"lucide:bed\"></iconify-icon> 1 suite + 2 Demi suítes<br><iconify-icon icon=\"lucide:car-front\"></iconify-icon> 2 vagas amplas(gaveta)<br><iconify-icon icon=\"lucide:ruler\"></iconify-icon> 127m² de área privativa<br><iconify-icon icon=\"lucide:flame\"></iconify-icon> Churrasqueira a carvão<br><iconify-icon icon=\"lucide:bath\"></iconify-icon> 2 banheiros e 1 lavabo<br>- Living ntegrado<br>- Cozinha ampla<br>- Área de serviço<br>- Lavabo social</p><p>Valor: R$1.920.000</p><p>Na área íntima, o apartamento dispõe de uma suíte principal e duas demi-suítes</p><p>Sun Paradise – Balneário Camboriú/SC</p><p>O Sun Paradise é um empreendimento residencial que combina conforto, segurança e lazer completo, ideal para quem busca qualidade de vida em um endereço central de Balneário Camboriú. Com infraestrutura moderna e planejada, oferece praticidade e bem-estar para todas as idades.</p><p>Localização – Bairro Centro- rua 904<br>Localizado no coração de Balneário Camboriú/SC<br>Próximo a comércios, serviços, restaurantes e à orla da cidade<br>Endereço estratégico, com fácil acesso às principais vias da região</p><p>Estrutura do Empreendimento<br>Apartamentos planejados para conforto, funcionalidade e bem-estar<br>Medidores individuais de água, gás e energia<br>Captação de água para maior sustentabilidade<br>Portão eletrônico com controle de acesso<br>Sistema de câmeras de segurança<br>Gás central<br>Elevador moderno e eficiente<br>Entrada para banhistas e box de praia<br>Infraestrutura para veículos elétricos<br>Hall decorado e mobiliado, proporcionando boas-vindas sofisticadas<br>Acessibilidade para pessoas com necessidades especiais (PNE)</p><p>Áreas de Lazer e Conveniências<br>Sauna<br>Gerador para áreas essenciais<br>Sala de jogos<br>Salão de festas<br>Cinema<br>Piscina adulto e piscina infantil<br>Hidromassagem<br>Quadra esportiva<br>Espaço gourmet<br>Espaço fitness<br>Playground</p><p>O Sun Paradise oferece uma experiência completa de moradia, unindo lazer, conforto e segurança em um dos endereços mais centrais e valorizados de Balneário Camboriú.</p><p>Quer saber um pouco mais sobre o empreendimento?<br>Chame no WhatApp agora e veja mais detalhes do Sun Paradise.<br>(47) 92001-3095</p>",
+    "descricaoMarkdown": "O apartamento fica em andar alto no Sun Paradise, uma obra da Baggio Empreendimentos entregue em 2024. Possui 127m² de área privativa e 2 apartamentos por andar:\n\n:icon[lucide:bed]: 1 suite + 2 Demi suítes\n:icon[lucide:car-front]: 2 vagas amplas(gaveta)\n:icon[lucide:ruler]: 127m² de área privativa\n:icon[lucide:flame]: Churrasqueira a carvão\n:icon[lucide:bath]: 2 banheiros e 1 lavabo\n- Living ntegrado\n- Cozinha ampla\n- Área de serviço\n- Lavabo social\n\nValor: R$1.920.000\n\nNa área íntima, o apartamento dispõe de uma suíte principal e duas demi-suítes\n\nSun Paradise – Balneário Camboriú/SC\n\nO Sun Paradise é um empreendimento residencial que combina conforto, segurança e lazer completo, ideal para quem busca qualidade de vida em um endereço central de Balneário Camboriú. Com infraestrutura moderna e planejada, oferece praticidade e bem-estar para todas as idades.\n\nLocalização – Bairro Centro- rua 904\nLocalizado no coração de Balneário Camboriú/SC\nPróximo a comércios, serviços, restaurantes e à orla da cidade\nEndereço estratégico, com fácil acesso às principais vias da região\n\nEstrutura do Empreendimento\nApartamentos planejados para conforto, funcionalidade e bem-estar\nMedidores individuais de água, gás e energia\nCaptação de água para maior sustentabilidade\nPortão eletrônico com controle de acesso\nSistema de câmeras de segurança\nGás central\nElevador moderno e eficiente\nEntrada para banhistas e box de praia\nInfraestrutura para veículos elétricos\nHall decorado e mobiliado, proporcionando boas-vindas sofisticadas\nAcessibilidade para pessoas com necessidades especiais (PNE)\n\nÁreas de Lazer e Conveniências\nSauna\nGerador para áreas essenciais\nSala de jogos\nSalão de festas\nCinema\nPiscina adulto e piscina infantil\nHidromassagem\nQuadra esportiva\nEspaço gourmet\nEspaço fitness\nPlayground\n\nO Sun Paradise oferece uma experiência completa de moradia, unindo lazer, conforto e segurança em um dos endereços mais centrais e valorizados de Balneário Camboriú.\n\nQuer saber um pouco mais sobre o empreendimento?\nChame no WhatApp agora e veja mais detalhes do Sun Paradise.\n(47) 92001-3095"
   }
 ];
