@@ -90,7 +90,9 @@ window.imoveis = [
       "Spa"
     ],
     "descricao": "<p>Apartamento <strong>garden</strong> em andar alto, mobiliado e decorado com <strong>três suítes</strong>, living integrado, cozinha equipada, churrasqueira a gás, terraço privativo parcialmente coberto e vista para o mar. O Horizon Residence oferece <strong>lazer completo</strong>, com piscinas, academia, spa, salão de festas, cinema, brinquedoteca, quadra poliesportiva e portaria 24 horas.</p>",
-    "descricaoMarkdown": "Apartamento **garden** em andar alto, mobiliado e decorado com **três suítes**, living integrado, cozinha equipada, churrasqueira a gás, terraço privativo parcialmente coberto e vista para o mar. O Horizon Residence oferece **lazer completo**, com piscinas, academia, spa, salão de festas, cinema, brinquedoteca, quadra poliesportiva e portaria 24 horas."
+    "descricaoMarkdown": "Apartamento **garden** em andar alto, mobiliado e decorado com **três suítes**, living integrado, cozinha equipada, churrasqueira a gás, terraço privativo parcialmente coberto e vista para o mar. O Horizon Residence oferece **lazer completo**, com piscinas, academia, spa, salão de festas, cinema, brinquedoteca, quadra poliesportiva e portaria 24 horas.",
+    "arquivado": true,
+    "arquivadoEm": "2026-08-12T13:17:38.436Z"
   },
   {
     "id": "0002",
