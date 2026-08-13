@@ -1219,7 +1219,7 @@ window.imoveis = [
       ""
     ],
     "imagem": "https://raw.githubusercontent.com/jmimoveis/JM_Imoveis/main/images/0011-1786642067474-0.jpg",
-    "youtube": "",
+    "youtube": "https://youtu.be/BIdgi7MOYvE",
     "badges": [
       "Venda",
       "Mobiliado"
