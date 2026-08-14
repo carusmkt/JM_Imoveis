@@ -1248,7 +1248,7 @@ window.imoveis = [
       "Câmeras de Segurança",
       "Reconhecimento facial"
     ],
-    "descricao": "<p>Apartamento no Pioneiros em rua calma e próximo a Roda Gigante. Com vista para a mata, um lugar ideal para quem quer privacidade sem perder a praticidade de estar perto de tudo. <br>Vista livre e a poucos metros da Miguel Matte, o condomínio fica próximo da Wave acadamia, lojas, mercados e farmácias.</p><p>3 Dormitórios<br>3 Banheiros<br>1 Suites<br>2 Vagas<br>119m² Área privativa<br>157m² Área total<br>R$ 2.500,00 IPTU<br>R$ 800,00 Condomínio</p>",
-    "descricaoMarkdown": "Apartamento no Pioneiros em rua calma e próximo a Roda Gigante. Com vista para a mata, um lugar ideal para quem quer privacidade sem perder a praticidade de estar perto de tudo. \nVista livre e a poucos metros da Miguel Matte, o condomínio fica próximo da Wave acadamia, lojas, mercados e farmácias.\n\n3 Dormitórios\n3 Banheiros\n1 Suites\n2 Vagas\n119m² Área privativa\n157m² Área total\nR$ 2.500,00 IPTU\nR$ 800,00 Condomínio"
+    "descricao": "<p>Apartamento no Pioneiros em rua calma e próximo a Roda Gigante. Com vista para a mata, um lugar ideal para quem quer privacidade sem perder a praticidade de estar perto de tudo. <br>Vista livre e a poucos metros da Miguel Matte, o condomínio fica próximo da Wave acadamia, lojas, mercados e farmácias.</p><p>3 Dormitórios<br>3 Banheiros<br>1 Suites<br>2 Vagas<br>119m² Área privativa<br>157m² Área total<br>R$ 200,00 IPTU<br>R$ 900,00 Condomínio</p>",
+    "descricaoMarkdown": "Apartamento no Pioneiros em rua calma e próximo a Roda Gigante. Com vista para a mata, um lugar ideal para quem quer privacidade sem perder a praticidade de estar perto de tudo. \nVista livre e a poucos metros da Miguel Matte, o condomínio fica próximo da Wave acadamia, lojas, mercados e farmácias.\n\n3 Dormitórios\n3 Banheiros\n1 Suites\n2 Vagas\n119m² Área privativa\n157m² Área total\nR$ 200,00 IPTU\nR$ 900,00 Condomínio"
   }
 ];
