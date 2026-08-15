@@ -731,7 +731,7 @@
       <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 1.25rem;">
         <div>
           <label style="display: flex; align-items: center; gap: 6px; font-weight: 700; color: #888; font-size: 0.8rem; text-transform: uppercase; margin-bottom: 12px;">
-            CONDOMÍNIO / MÊS
+            CONDOMÍNIO
           </label>
           <div class="toggle-track" data-group="condominio" style="margin-bottom: 12px; width: fit-content;">
             <span class="toggle-pill" id="pill-condominio"></span>
@@ -758,13 +758,26 @@
         </div>
       </div>
 
-      <div class="form-group" id="group-periodo-iptu" style="margin-bottom: 0;">
-        <label style="font-size: 0.8rem; font-weight: 700; color: #888; text-transform: uppercase;">VALOR REFERENTE AO PERÍODO</label>
-        <div class="toggle-track" data-group="periodo" style="margin-top: 8px; width: fit-content;">
-          <span class="toggle-pill" id="pill-periodo"></span>
-          <div class="toggle-labels" style="padding: 2px;">
-            <button type="button" class="toggle-option" data-group="periodo" data-value="Anual" onclick="setPrecoToggle('periodo','Anual')">ANUAL</button>
-            <button type="button" class="toggle-option" data-group="periodo" data-value="Mensal" onclick="setPrecoToggle('periodo','Mensal')">MENSAL</button>
+      <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 0;">
+        <div class="form-group" id="group-periodo-condominio" style="margin-bottom: 0;">
+          <label style="font-size: 0.8rem; font-weight: 700; color: #888; text-transform: uppercase;">CONDOMÍNIO REFERENTE AO PERÍODO</label>
+          <div class="toggle-track" data-group="periodo-cond" style="margin-top: 8px; width: fit-content;">
+            <span class="toggle-pill" id="pill-periodo-cond"></span>
+            <div class="toggle-labels" style="padding: 2px;">
+              <button type="button" class="toggle-option" data-group="periodo-cond" data-value="Anual" onclick="setPrecoToggle('periodo-cond','Anual')">ANUAL</button>
+              <button type="button" class="toggle-option" data-group="periodo-cond" data-value="Mensal" onclick="setPrecoToggle('periodo-cond','Mensal')">MENSAL</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group" id="group-periodo-iptu" style="margin-bottom: 0;">
+          <label style="font-size: 0.8rem; font-weight: 700; color: #888; text-transform: uppercase;">IPTU REFERENTE AO PERÍODO</label>
+          <div class="toggle-track" data-group="periodo" style="margin-top: 8px; width: fit-content;">
+            <span class="toggle-pill" id="pill-periodo"></span>
+            <div class="toggle-labels" style="padding: 2px;">
+              <button type="button" class="toggle-option" data-group="periodo" data-value="Anual" onclick="setPrecoToggle('periodo','Anual')">ANUAL</button>
+              <button type="button" class="toggle-option" data-group="periodo" data-value="Mensal" onclick="setPrecoToggle('periodo','Mensal')">MENSAL</button>
+            </div>
           </div>
         </div>
       </div>
@@ -1801,11 +1814,13 @@
     let dialogCondominioIsento = 'false';
     let dialogIptuIsento = 'false';
     let dialogPeriodoIptu = 'Anual';
+    let dialogPeriodoCondominio = 'Mensal';
 
     function setPrecoToggle(group, value) {
       if (group === 'condominio') dialogCondominioIsento = value;
       if (group === 'iptu') dialogIptuIsento = value;
       if (group === 'periodo') dialogPeriodoIptu = value;
+      if (group === 'periodo-cond') dialogPeriodoCondominio = value;
       updatePrecoToggleUI();
       togglePrecoInputs();
     }
@@ -1820,9 +1835,13 @@
       document.querySelectorAll('.toggle-option[data-group="periodo"]').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.value === dialogPeriodoIptu);
       });
+      document.querySelectorAll('.toggle-option[data-group="periodo-cond"]').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.value === dialogPeriodoCondominio);
+      });
       movePill('condominio', dialogCondominioIsento);
       movePill('iptu', dialogIptuIsento);
       movePill('periodo', dialogPeriodoIptu);
+      movePill('periodo-cond', dialogPeriodoCondominio);
     }
 
     function openPrecoDialog() {
@@ -1847,6 +1866,11 @@
       
       condInput.style.display = condIsento ? 'none' : 'block';
       iptuInput.style.display = iptuIsento ? 'none' : 'block';
+
+      const condPeriodo = document.getElementById('group-periodo-condominio');
+      const iptuPeriodo = document.getElementById('group-periodo-iptu');
+      if (condPeriodo) condPeriodo.style.visibility = condIsento ? 'hidden' : 'visible';
+      if (iptuPeriodo) iptuPeriodo.style.visibility = iptuIsento ? 'hidden' : 'visible';
     }
 
     function updateDetalhesPrecoUI() {
@@ -2954,6 +2978,7 @@
         dialogIptuIsento = imovel.iptuIsento ? 'true' : 'false';
         document.getElementById('f-valor-iptu').value = formatBRLDigits(imovel.valorIptu);
         dialogPeriodoIptu = imovel.periodoIptu || 'Anual';
+        dialogPeriodoCondominio = imovel.periodoCondominio || 'Mensal';
         updatePrecoToggleUI();
         togglePrecoInputs();
 
@@ -2996,6 +3021,7 @@
         dialogIptuIsento = 'false';
         document.getElementById('f-valor-iptu').value = '';
         dialogPeriodoIptu = 'Anual';
+        dialogPeriodoCondominio = 'Mensal';
         updatePrecoToggleUI();
         togglePrecoInputs();
 
@@ -3063,6 +3089,7 @@
         valorAluguel: document.getElementById('f-valor-aluguel').value,
         condominioIsento: dialogCondominioIsento === 'true',
         valorCondominio: document.getElementById('f-valor-condominio').value,
+        periodoCondominio: dialogPeriodoCondominio,
         iptuIsento: dialogIptuIsento === 'true',
         valorIptu: document.getElementById('f-valor-iptu').value,
         periodoIptu: dialogPeriodoIptu,
