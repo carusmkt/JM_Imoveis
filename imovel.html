@@ -760,7 +760,52 @@
       font-size: clamp(1.8rem, 3vw, 2.2rem);
       font-family: var(--font-serif);
       font-weight: 600;
+      margin-bottom: 1.25rem;
+    }
+
+    /* Custos recorrentes: IPTU e condomínio, cada um com o período cadastrado */
+    .property-costs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
       margin-bottom: 2rem;
+    }
+
+    .property-cost-item {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      background: var(--color-surface);
+      border: 1px solid var(--color-khaki);
+      border-radius: 999px;
+      padding: 8px 16px;
+    }
+
+    .property-cost-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--color-taupe);
+    }
+
+    .property-cost-value {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--color-leather);
+    }
+
+    .property-cost-period {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--color-taupe);
+    }
+
+    @media (max-width: 560px) {
+      .property-cost-item {
+        width: 100%;
+        justify-content: space-between;
+      }
     }
 
     /* Código do imóvel + link, com botões de copiar para levar à conversa */
@@ -1290,6 +1335,30 @@
     // Aceita também um número solto (1) ou id antigo, normalizando para o formato.
     function formatId(id) {
       return String(id ?? '').padStart(4, '0');
+    }
+
+    // 'Mensal'/'Anual' vem do cadastro (admin). Locação normalmente usa IPTU mensal
+    // e venda usa IPTU anual, por isso o período precisa aparecer junto do valor.
+    function sufixoPeriodo(periodo) {
+      return String(periodo || '').toLowerCase() === 'mensal' ? '/mês' : '/ano';
+    }
+
+    function buildCustoItem(label, isento, valor, periodo) {
+      if (isento) {
+        return `<div class="property-cost-item"><span class="property-cost-label">${label}</span><span class="property-cost-value">Isento</span></div>`;
+      }
+      const valorTxt = String(valor || '').trim();
+      if (!valorTxt) return '';
+      return `<div class="property-cost-item"><span class="property-cost-label">${label}</span><span class="property-cost-value">${valorTxt} <span class="property-cost-period">${sufixoPeriodo(periodo)}</span></span></div>`;
+    }
+
+    function renderCustosHTML(imovel) {
+      const itens = [
+        buildCustoItem('IPTU', imovel.iptuIsento, imovel.valorIptu, imovel.periodoIptu || 'Anual'),
+        buildCustoItem('Condomínio', imovel.condominioIsento, imovel.valorCondominio, imovel.periodoCondominio || 'Mensal')
+      ].filter(Boolean);
+      if (itens.length === 0) return '';
+      return `<div class="property-costs">${itens.join('')}</div>`;
     }
 
     const main = document.getElementById('property-main');
@@ -1872,6 +1941,8 @@
             <a class="maps-link" href="${buildMapsUrl(imovel)}" target="_blank" rel="noopener noreferrer">Ver no Google Maps <iconify-icon icon="mdi:map-marker-radius-outline"></iconify-icon></a>
           </div>
           <div class="property-price">${imovel.preco || 'Consulte'}</div>
+
+          ${renderCustosHTML(imovel)}
 
           <div class="property-ref">
             <div class="property-ref-item">
