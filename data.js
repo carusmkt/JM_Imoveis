@@ -124,12 +124,12 @@ window.imoveis = [
     "areaUtil": "152.67 m²",
     "areaTotal": "259.46 m²",
     "imagens": [
+      "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1783462384382-1783462471760-5.jpg",
       "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1783462384382-1783462464350-0.jpg",
       "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1783462384382-1783462465769-1.jpg",
       "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1783462384382-1783462467377-2.jpg",
       "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1783462384382-1783462469017-3.jpg",
       "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1783462384382-1783462470350-4.jpg",
-      "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1783462384382-1783462471760-5.jpg",
       "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1783462384382-1783462472975-6.jpg",
       "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1783462384382-1783462474210-7.jpg",
       "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1783462384382-1783462475570-8.jpg",
@@ -142,12 +142,12 @@ window.imoveis = [
       "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1783462384382-1783462485299-15.jpg"
     ],
     "fotosComodos": [
+      "Suíte",
       "",
       "Brinquedoteca",
       "",
       "Sala",
       "Hall de entrada",
-      "Suíte",
       "",
       "",
       "",
@@ -159,13 +159,14 @@ window.imoveis = [
       "Academia",
       ""
     ],
-    "imagem": "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1783462384382-1783462464350-0.jpg",
+    "imagem": "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1783462384382-1783462471760-5.jpg",
     "youtube": "https://youtu.be/o4Oq46ebf3A?si=Ti-Ah_ehHJoIxGL9",
     "badges": [
       "Oportunidade",
       "Alto Padrão",
       "Lançamento"
     ],
+    "destaqueBadge": "",
     "badge": "Oportunidade",
     "caracteristicas": [
       "Cozinha americana",
