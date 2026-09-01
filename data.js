@@ -809,7 +809,7 @@ window.imoveis = [
     "endereco": "Rua Inglaterra",
     "numero": "159",
     "complemento": "",
-    "preco": "R$ 970.000",
+    "preco": "R$ 930.000",
     "valorVenda": "",
     "valorAluguel": "",
     "condominioIsento": false,
