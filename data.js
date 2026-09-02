@@ -922,7 +922,7 @@ window.imoveis = [
       ""
     ],
     "imagem": "https://raw.githubusercontent.com/mybox-santoandre/JM_Imoveis/main/images/1784151907421-1784151921417-6.jpg",
-    "youtube": "",
+    "youtube": "https://youtu.be/H21KKgXqEKI",
     "badges": [
       "Novo"
     ],
