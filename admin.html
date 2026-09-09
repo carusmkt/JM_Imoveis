@@ -3234,7 +3234,7 @@
             if (!putImgRes.ok) {
               throw new Error(formatGithubError(await readGithubError(putImgRes)) || `Erro ao enviar uma foto de ${imovel.nome}.`);
             }
-            imovel.imagens[i] = `https://raw.githubusercontent.com/${githubConfig.owner}/${githubConfig.repo}/${branch}/${fileName}`;
+            imovel.imagens[i] = fileName;
           }
           imovel.imagem = imovel.imagens.length > 0 ? imovel.imagens[0] : '';
         }
