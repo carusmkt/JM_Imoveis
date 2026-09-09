@@ -787,7 +787,7 @@ window.imoveis = [
       ""
     ],
     "imagem": "images/1784151907421-1784151937382-16.jpg",
-    "youtube": "https://youtu.be/H21KKgXqEKI",
+    "youtube": "",
     "badges": [
       "Novo"
     ],
@@ -833,6 +833,7 @@ window.imoveis = [
     "areaUtil": "61.26 m²",
     "areaTotal": "",
     "imagens": [
+      "images/0013-1788271808354-33.jpg",
       "images/1784151907421-1784151921417-6.jpg",
       "images/1784151907421-1784151912610-0.jpg",
       "images/1784151907421-1784151914045-1.jpg",
@@ -866,7 +867,6 @@ window.imoveis = [
       "images/0013-1788271801102-30.jpg",
       "images/0013-1788271803338-31.jpg",
       "images/0013-1788271805806-32.jpg",
-      "images/0013-1788271808354-33.jpg",
       "images/0013-1788271810977-34.jpg",
       "images/0013-1788271812768-35.jpg",
       "images/0013-1788271814818-36.jpg",
@@ -926,7 +926,7 @@ window.imoveis = [
       "",
       ""
     ],
-    "imagem": "images/1784151907421-1784151921417-6.jpg",
+    "imagem": "images/0013-1788271808354-33.jpg",
     "youtube": "https://youtu.be/H21KKgXqEKI",
     "badges": [
       "Novo"
