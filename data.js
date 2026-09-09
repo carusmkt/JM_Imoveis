@@ -683,6 +683,7 @@ window.imoveis = [
     "valorAluguel": "",
     "condominioIsento": false,
     "valorCondominio": "",
+    "periodoCondominio": "Mensal",
     "iptuIsento": false,
     "valorIptu": "",
     "periodoIptu": "Anual",
@@ -696,6 +697,7 @@ window.imoveis = [
     "areaUtil": "61.26 m²",
     "areaTotal": "",
     "imagens": [
+      "images/1784151907421-1784151937382-16.jpg",
       "images/1784151907421-1784151921417-6.jpg",
       "images/1784151907421-1784151912610-0.jpg",
       "images/1784151907421-1784151914045-1.jpg",
@@ -713,7 +715,6 @@ window.imoveis = [
       "images/1784151907421-1784151931609-13.jpg",
       "images/1784151907421-1784151932886-14.jpg",
       "images/1784151907421-1784151935524-15.jpg",
-      "images/1784151907421-1784151937382-16.jpg",
       "images/1784151907421-1784151938727-17.jpg",
       "images/1784151907421-1784151940363-18.jpg",
       "images/1784151907421-1784151941570-19.jpg",
@@ -785,15 +786,19 @@ window.imoveis = [
       "",
       ""
     ],
-    "imagem": "images/1784151907421-1784151921417-6.jpg",
-    "youtube": "",
+    "imagem": "images/1784151907421-1784151937382-16.jpg",
+    "youtube": "https://youtu.be/H21KKgXqEKI",
     "badges": [
       "Novo"
     ],
     "destaqueBadge": "",
     "badge": "Novo",
     "caracteristicas": [],
-    "caracteristicasCondominio": [],
+    "caracteristicasCondominio": [
+      "Academia",
+      "Elevador",
+      "Portão eletrônico"
+    ],
     "descricao": "<p>Apartamento novo no Residencial Alto da Luz, no bairro Nações, em Balneário Camboriú, com dois dormitórios, sendo uma suíte, banheiro social, ambientes integrados, porcelanato, boa iluminação, ventilação natural nos banheiros e localização a aproximadamente 750 metros da praia. O condomínio conta com elevador, academia e salão de festas.</p>",
     "descricaoMarkdown": "Apartamento novo no Residencial Alto da Luz, no bairro Nações, em Balneário Camboriú, com dois dormitórios, sendo uma suíte, banheiro social, ambientes integrados, porcelanato, boa iluminação, ventilação natural nos banheiros e localização a aproximadamente 750 metros da praia. O condomínio conta com elevador, academia e salão de festas."
   },
