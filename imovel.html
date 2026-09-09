@@ -1481,6 +1481,20 @@
       if (lightbox && lightbox.classList.contains('active') && galleryView === 'photos') fitLightboxWrapper();
     });
 
+    // Centraliza a miniatura ativa apenas dentro da sua própria faixa. Usar
+    // scrollIntoView aqui também tenta rolar ancestrais (inclusive a lightbox
+    // fechada), o que pode deixar a faixa principal sem conteúdo visível em
+    // alguns navegadores durante a troca de imagem.
+    function scrollActiveThumbnail(thumbsWrap, activeThumb) {
+      if (!thumbsWrap || !activeThumb || thumbsWrap.scrollWidth <= thumbsWrap.clientWidth) return;
+
+      const maxScrollLeft = thumbsWrap.scrollWidth - thumbsWrap.clientWidth;
+      const targetScrollLeft = activeThumb.offsetLeft - (thumbsWrap.clientWidth - activeThumb.offsetWidth) / 2;
+      const scrollLeft = Math.max(0, Math.min(targetScrollLeft, maxScrollLeft));
+
+      thumbsWrap.scrollTo({ left: scrollLeft, behavior: 'smooth' });
+    }
+
     function renderGallery() {
       const mainImg = document.getElementById('gallery-main-img');
       const counter = document.getElementById('gallery-counter');
@@ -1504,7 +1518,7 @@
           const isActive = i === galleryIndex;
           img.classList.toggle('active', isActive);
           if (isActive) {
-            img.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+            scrollActiveThumbnail(thumbsWrap, img);
           }
         });
       }
@@ -1513,7 +1527,7 @@
           const isActive = i === galleryIndex;
           img.classList.toggle('active', isActive);
           if (isActive) {
-            img.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+            scrollActiveThumbnail(lightboxThumbsWrap, img);
           }
         });
       }
