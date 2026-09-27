@@ -1489,7 +1489,11 @@
       if (!thumbsWrap || !activeThumb || thumbsWrap.scrollWidth <= thumbsWrap.clientWidth) return;
 
       const maxScrollLeft = thumbsWrap.scrollWidth - thumbsWrap.clientWidth;
-      const targetScrollLeft = activeThumb.offsetLeft - (thumbsWrap.clientWidth - activeThumb.offsetWidth) / 2;
+      // As posições precisam usar a própria faixa como referência, não o offsetParent.
+      const stripRect = thumbsWrap.getBoundingClientRect();
+      const thumbRect = activeThumb.getBoundingClientRect();
+      const targetScrollLeft = thumbsWrap.scrollLeft + thumbRect.left - stripRect.left
+        - thumbsWrap.clientLeft - (thumbsWrap.clientWidth - thumbRect.width) / 2;
       const scrollLeft = Math.max(0, Math.min(targetScrollLeft, maxScrollLeft));
 
       thumbsWrap.scrollTo({ left: scrollLeft, behavior: 'smooth' });
@@ -1502,6 +1506,7 @@
       const lightboxImg = document.getElementById('lightbox-img');
       const lightboxCounter = document.getElementById('lightbox-counter');
       const lightboxThumbsWrap = document.getElementById('lightbox-thumbs');
+      const lightboxOpen = document.getElementById('gallery-lightbox')?.classList.contains('active');
       if (!mainImg || galleryImgs.length === 0) return;
       const currentSrc = galleryImgs[galleryIndex];
       mainImg.src = currentSrc;
@@ -1517,7 +1522,7 @@
         Array.from(thumbsWrap.children).forEach((img, i) => {
           const isActive = i === galleryIndex;
           img.classList.toggle('active', isActive);
-          if (isActive) {
+          if (isActive && !lightboxOpen) {
             scrollActiveThumbnail(thumbsWrap, img);
           }
         });
@@ -1526,7 +1531,7 @@
         Array.from(lightboxThumbsWrap.children).forEach((img, i) => {
           const isActive = i === galleryIndex;
           img.classList.toggle('active', isActive);
-          if (isActive) {
+          if (isActive && lightboxOpen) {
             scrollActiveThumbnail(lightboxThumbsWrap, img);
           }
         });
@@ -1669,10 +1674,9 @@
       const lightbox = document.getElementById('gallery-lightbox');
       if (!lightbox) return;
 
-      renderGallery();
-      syncGalleryView();
-
       lightbox.classList.add('active');
+      syncGalleryView();
+      renderGallery();
       document.body.style.overflow = 'hidden';
       const header = document.querySelector('header');
       if (header) header.style.visibility = 'hidden';
@@ -1683,6 +1687,8 @@
       if (!lightbox) return;
       lightbox.classList.remove('active');
       document.body.style.overflow = '';
+      const thumbsWrap = document.getElementById('gallery-thumbs');
+      scrollActiveThumbnail(thumbsWrap, thumbsWrap?.querySelector('.active'));
       const header = document.querySelector('header');
       if (header) header.style.visibility = '';
     };
