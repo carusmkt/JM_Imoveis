@@ -89,7 +89,7 @@
       color: var(--color-leather);
       line-height: 1.6;
       overscroll-behavior: none;
-      animation: page-enter 0.45s ease both;
+      animation: page-enter 0.45s ease backwards;
       transition: background-color 0.45s ease, color 0.45s ease;
     }
 
@@ -387,7 +387,7 @@
       inset: 0;
       background: #0c0b09;
       z-index: 2000;
-      display: flex;
+      display: none;
       align-items: center;
       justify-content: center;
       padding: 60px;
@@ -397,6 +397,7 @@
     }
 
     .lightbox.active {
+      display: flex;
       opacity: 1;
       pointer-events: auto;
     }
@@ -1512,11 +1513,14 @@
       mainImg.src = currentSrc;
 
       applyWatermarkOverlay(currentSrc, 'gallery-copy-overlay');
-      applyWatermarkOverlay(currentSrc, 'lightbox-copy-overlay');
+      // A lightbox fechada não deve gerar imagens nem alterar camadas de composição.
+      if (lightboxOpen) {
+        applyWatermarkOverlay(currentSrc, 'lightbox-copy-overlay');
+        if (lightboxImg) lightboxImg.src = currentSrc;
+        fitLightboxWrapper();
+      }
 
       if (counter) counter.textContent = `${galleryIndex + 1} / ${galleryImgs.length}`;
-      if (lightboxImg) lightboxImg.src = currentSrc;
-      fitLightboxWrapper();
       if (lightboxCounter) lightboxCounter.textContent = `${galleryIndex + 1} / ${galleryImgs.length}`;
       if (thumbsWrap) {
         Array.from(thumbsWrap.children).forEach((img, i) => {
