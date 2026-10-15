@@ -1692,11 +1692,11 @@ window.imoveis = [
     "tipo": "Apartamento",
     "categoria": "Residencial",
     "finalidade": "Compra",
-    "quartos": 0,
-    "suites": 0,
-    "banheiros": 0,
-    "vagas": 0,
-    "areaUtil": "",
+    "quartos": 3,
+    "suites": 1,
+    "banheiros": 3,
+    "vagas": 2,
+    "areaUtil": "106.80 m²",
     "areaTotal": "",
     "imagens": [
       "images/0015-1792007895328-0.jpg",
@@ -1762,11 +1762,30 @@ window.imoveis = [
     ],
     "imagem": "images/0015-1792007895328-0.jpg",
     "youtube": "",
-    "badges": [],
+    "badges": [
+      "Venda",
+      "Novo"
+    ],
     "destaqueBadge": "",
-    "badge": "",
-    "caracteristicas": [],
-    "caracteristicasCondominio": [],
+    "badge": "Venda",
+    "caracteristicas": [
+      "churrasqueira a carvão",
+      "cozinha integrada",
+      "2 Demi suíte"
+    ],
+    "caracteristicasCondominio": [
+      "Salão de festas",
+      "Playground",
+      "Salão de jogos",
+      "Espaço zen",
+      "Quadra poliesportiva",
+      "Espaço gourmet",
+      "Academia",
+      "Quadra de padel",
+      "Espaço mulher",
+      "Spa",
+      "Elevador"
+    ],
     "descricao": "",
     "descricaoMarkdown": ""
   }
