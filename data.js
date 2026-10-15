@@ -1680,7 +1680,7 @@ window.imoveis = [
     "endereco": "Rua Maurino Vieira",
     "numero": "166",
     "complemento": "",
-    "preco": "",
+    "preco": "R$ 1.490.000",
     "valorVenda": "",
     "valorAluguel": "",
     "condominioIsento": false,
@@ -1761,7 +1761,7 @@ window.imoveis = [
       ""
     ],
     "imagem": "images/0015-1792007895328-0.jpg",
-    "youtube": "",
+    "youtube": "https://youtu.be/2pQasIAmsEg",
     "badges": [
       "Venda",
       "Novo"
