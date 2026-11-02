@@ -671,6 +671,13 @@
       .btn { font-size: 0.78rem; padding: 0 14px; }
     }
   </style>
+  <link rel="stylesheet" href="admin/admin.css">
+  <link rel="stylesheet" href="admin/dist/admin-ui.css">
+  <script defer src="admin/dist/admin-ui.js"></script>
+  <script src="admin/core.js"></script>
+  <script src="admin/board.js"></script>
+  <script src="admin/photos.js"></script>
+  <script src="admin/motion.js"></script>
   <script>
     const savedTheme = localStorage.getItem('admin_theme') || 'light';
     document.documentElement.setAttribute('data-theme', savedTheme);
@@ -679,14 +686,18 @@
 <body class="pin-locked">
 
   <!-- PIN GATE -->
-  <div class="pin-gate-overlay" id="pin-gate-overlay">
+  <div class="pin-gate-overlay" id="pin-gate-overlay" role="dialog" aria-modal="true" aria-labelledby="pin-gate-title">
     <div class="pin-gate-card">
       <iconify-icon icon="lucide:lock"></iconify-icon>
-      <h2>Acesso Restrito</h2>
-      <p>Este espaço é exclusivo para administradores, favor, digite o PIN para entrar.</p>
-      <input type="password" inputmode="numeric" pattern="[0-9]*" maxlength="8" class="pin-gate-input" id="pin-gate-input" autocomplete="off" placeholder="········">
-      <div class="pin-gate-error" id="pin-gate-error"></div>
-      <button class="pin-gate-btn" id="pin-gate-btn">Entrar</button>
+      <h2 id="pin-gate-title">Acesso ao administrador</h2>
+      <p>Digite seu PIN de oito dígitos para gerenciar os imóveis.</p>
+      <div id="one-time-code">
+        <form id="pin-fallback-form">
+          <input type="password" inputmode="numeric" pattern="[0-9]{8}" maxlength="8" required class="pin-gate-input" id="pin-gate-input" autocomplete="current-password" aria-label="PIN de administrador, 8 dígitos" aria-describedby="pin-fallback-error">
+          <p id="pin-fallback-error" class="pin-gate-error" role="status"></p>
+          <button type="submit" class="pin-gate-btn">Entrar</button>
+        </form>
+      </div>
     </div>
   </div>
 
@@ -788,10 +799,10 @@
     </div>
   </dialog>
 
-  <div class="container">
+  <div class="container" id="admin-content" inert>
     <div class="header-actions">
-      <h1>JM Imóveis Admin</h1>
-      <div style="display: flex; gap: 10px; align-items: center;">
+      <div class="admin-title"><img src="img/logo.svg" alt=""><h1>JM Imóveis<span>Administração do site</span></h1></div>
+      <div class="header-buttons" style="display: flex; gap: 10px; align-items: center;">
         <button class="btn btn-secondary btn-icon-square" onclick="toggleTheme()" title="Alternar Tema"><iconify-icon id="theme-icon" icon="lucide:sun" style="font-size: 1.2rem;"></iconify-icon></button>
         <button class="btn btn-secondary" onclick="showConfig()">Configurações</button>
         <button class="btn btn-sync" onclick="saveToGithub()" id="btn-sync">
@@ -847,14 +858,14 @@
         <div id="pending-list"></div>
       </div>
 
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-        <h2>Imóveis Cadastrados</h2>
-        <div style="display: flex; gap: 10px;">
-          <button class="btn btn-secondary" onclick="openGallery()"><iconify-icon icon="mdi:drag"></iconify-icon> Reorganizar</button>
-          <button class="btn btn-primary" onclick="openForm()">+ Novo Imóvel</button>
+      <div class="board-header">
+        <div><h2>Seus imóveis</h2><p>Visualize, organize e mantenha seu catálogo em dia.</p></div>
+        <div class="board-header-actions">
+          <button type="button" class="btn btn-secondary" id="btn-organize" onclick="openGallery()" aria-pressed="false"><iconify-icon icon="lucide:grip"></iconify-icon> Reorganizar</button>
+          <button type="button" class="btn btn-primary" onclick="openForm()"><iconify-icon icon="lucide:plus"></iconify-icon> Novo imóvel</button>
         </div>
       </div>
-
+      <div class="board-filters">
       <div class="list-tabs" id="list-tabs">
         <button type="button" class="list-tab active" data-view="ativos" onclick="setListView('ativos')">
           <iconify-icon icon="mdi:home-city-outline"></iconify-icon> No site
@@ -870,28 +881,55 @@
         </button>
       </div>
 
+        <label class="property-search"><iconify-icon icon="lucide:search" aria-hidden="true"></iconify-icon><input type="search" id="property-search" aria-label="Buscar imóveis" placeholder="Buscar por nome, código ou cidade"></label>
+      </div>
+      <div class="board-tools" id="board-selection-tools">
+        <label><input type="checkbox" id="select-all-properties"> Selecionar todos os resultados</label>
+        <button type="button" id="undo-order" class="undo-order" hidden><iconify-icon icon="lucide:undo-2"></iconify-icon> Desfazer organização</button>
+      </div>
+      <p class="organize-help" id="organize-help" hidden>Selecione um ou mais imóveis e arraste pela alça na base do card. Ou use os botões para escolher uma posição. Na busca, use os botões de posição.</p>
+      <p class="board-announcement" id="board-announcement" role="status" aria-live="polite"></p>
       <div id="imoveis-list"></div>
+      <div class="selection-bar" id="selection-bar" aria-label="Ações dos imóveis selecionados" hidden>
+        <strong id="selection-count">0 selecionados</strong>
+        <div class="selection-moves">
+          <button type="button" data-move-selection="first" aria-label="Mover seleção para o início dos destaques" title="Início dos destaques"><iconify-icon icon="lucide:chevrons-up"></iconify-icon></button>
+          <button type="button" data-move-selection="up" aria-label="Mover seleção uma posição antes" title="Uma posição antes"><iconify-icon icon="lucide:arrow-up"></iconify-icon></button>
+          <button type="button" data-move-selection="down" aria-label="Mover seleção uma posição depois" title="Uma posição depois"><iconify-icon icon="lucide:arrow-down"></iconify-icon></button>
+          <button type="button" data-move-selection="last" aria-label="Mover seleção para o final do catálogo" title="Final do catálogo"><iconify-icon icon="lucide:chevrons-down"></iconify-icon></button>
+        </div>
+        <button type="button" id="move-position">Mover imóveis</button>
+        <button type="button" id="clear-selection" class="clear-selection" aria-label="Limpar seleção" title="Limpar seleção"><iconify-icon icon="lucide:x"></iconify-icon></button>
+      </div>
     </div>
 
   </div>
 
-  <!-- DIALOG DE REORGANIZAÇÃO EM GALERIA (DRAG & DROP) -->
-  <dialog id="gallery-dialog" class="custom-dialog gallery-dialog">
-    <div class="dialog-header">
-      <div>
-        <h2>Reorganizar Imóveis</h2>
-        <p>Arraste os cards para definir a ordem de exibição no site.</p>
+  <dialog id="move-dialog" class="custom-dialog move-dialog" aria-labelledby="move-title">
+    <h3 id="move-title">Mover seleção</h3>
+    <p id="move-position-hint"></p>
+    <form id="move-form">
+      <label for="move-position-input">Nova posição do primeiro imóvel</label>
+      <input id="move-position-input" type="number" min="1" step="1" required aria-describedby="move-position-hint">
+      <div class="move-dialog-actions">
+        <button type="button" class="btn btn-secondary" onclick="document.getElementById('move-dialog').close()">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Mover seleção</button>
       </div>
-      <button class="icon-btn dialog-close" onclick="closeGalleryDialog()"><iconify-icon icon="mdi:close"></iconify-icon></button>
-    </div>
-    <div class="gallery-grid" id="gallery-grid"></div>
-    <div class="dialog-footer">
-      <button type="button" class="btn btn-primary" onclick="closeGalleryDialog()">Concluído</button>
+    </form>
+  </dialog>
+
+  <dialog id="photo-dialog" class="custom-dialog photo-dialog" aria-labelledby="photo-title">
+    <div class="photo-dialog-header"><h2 id="photo-title">Fotos do imóvel</h2><button type="button" id="photo-close" aria-label="Fechar foto"><iconify-icon icon="lucide:x"></iconify-icon></button></div>
+    <div class="photo-stage"><img id="photo-full" alt=""><p id="photo-error" role="status" hidden>Não foi possível carregar esta foto. Tente a próxima imagem ou feche e abra novamente.</p></div>
+    <div class="photo-dialog-footer">
+      <button type="button" id="photo-previous" aria-label="Foto anterior"><iconify-icon icon="lucide:chevron-left"></iconify-icon></button>
+      <p id="photo-caption" aria-live="polite"></p>
+      <button type="button" id="photo-next" aria-label="Próxima foto"><iconify-icon icon="lucide:chevron-right"></iconify-icon></button>
     </div>
   </dialog>
 
   <!-- DIALOG DEDICADO DE CADASTRO/EDIÇÃO DE IMÓVEL -->
-  <dialog id="property-dialog" class="custom-dialog property-dialog">
+  <dialog id="property-dialog" class="custom-dialog property-dialog" aria-labelledby="form-title">
     <div class="dialog-header">
       <h2 id="form-title">Cadastrar Imóvel</h2>
       <button type="button" class="icon-btn dialog-close" onclick="closePropertyDialog()" aria-label="Fechar"><iconify-icon icon="mdi:close"></iconify-icon></button>
@@ -907,12 +945,13 @@
             <span class="quality-label">Qualidade do anúncio</span>
             <span class="quality-score-value" id="quality-score-value">0/10</span>
           </div>
-          <div class="quality-bar-track"><div class="quality-bar-fill" id="quality-bar-fill"></div></div>
+          <div class="quality-bar-track" id="quality-progress" role="progressbar" aria-label="Qualidade do anúncio" aria-valuemin="0" aria-valuemax="10" aria-valuenow="0"><div class="quality-bar-fill" id="quality-bar-fill"></div></div>
           <div class="quality-panel-actions">
             <button type="button" class="quality-toggle-btn" id="quality-toggle-btn" onclick="toggleQualityDetails()">Ver detalhes</button>
             <button type="button" class="quality-hide-btn" onclick="hideQualityPanel()" title="Ocultar análise" aria-label="Ocultar análise"><iconify-icon icon="mdi:eye-off-outline"></iconify-icon></button>
           </div>
         </div>
+        <p class="quality-note">Uma orientação para melhorar o anúncio. Vídeo e características extras são bônus, sem obrigatoriedade.</p>
         <ul class="quality-details" id="quality-details"></ul>
       </div>
       <button type="button" class="quality-show-btn" id="quality-show-btn" onclick="showQualityPanel()">
@@ -1067,7 +1106,18 @@
           <span>JPG ou PNG</span>
           <input type="file" id="f-imagens" multiple accept="image/*">
         </div>
-        <div id="image-preview-container" class="image-preview-grid"></div>
+        <p class="photo-selection-help" id="photo-selection-help">Marque as fotos e arraste pela alça para movê-las juntas. A primeira foto é a capa.</p>
+        <div class="photo-selection-toolbar" aria-label="Organização das fotos">
+          <label class="photo-select-all"><input type="checkbox" id="select-all-photos"> Selecionar todas</label>
+          <div id="photo-selection-actions" class="photo-selection-actions" hidden>
+            <span id="photo-selection-count"></span>
+            <button type="button" id="photos-move-first" title="Mover as fotos selecionadas para o início"><iconify-icon icon="lucide:chevrons-up" aria-hidden="true"></iconify-icon> Mover para o início</button>
+            <button type="button" id="photos-move-last" title="Mover as fotos selecionadas para o fim"><iconify-icon icon="lucide:chevrons-down" aria-hidden="true"></iconify-icon> Mover para o fim</button>
+            <button type="button" id="clear-photo-selection">Limpar seleção</button>
+          </div>
+        </div>
+        <p class="photo-selection-status" id="photo-selection-status" role="status" aria-live="polite"></p>
+        <div id="image-preview-container" class="image-preview-grid" aria-describedby="photo-selection-help"></div>
       </div>
 
       <div class="form-group">
@@ -1511,81 +1561,7 @@
       });
     }
 
-    function renderList() {
-      const container = document.getElementById('imoveis-list');
-      container.innerHTML = '';
-      updateListCounts();
-
-      const lista = getViewList();
-
-      if (lista.length === 0) {
-        const vazio = {
-          ativos: 'Nenhum imóvel publicado no site.',
-          arquivados: 'Nenhum imóvel arquivado. Ao arquivar, o imóvel sai do site mas continua salvo aqui.',
-          lixeira: 'A lixeira está vazia.'
-        }[listView];
-        container.innerHTML = `<div class="list-empty">${vazio}</div>`;
-        return;
-      }
-
-      if (listView === 'lixeira') {
-        const aviso = document.createElement('div');
-        aviso.className = 'lixeira-aviso';
-        aviso.innerHTML = `<iconify-icon icon="mdi:information-outline"></iconify-icon> Imóveis na lixeira são apagados definitivamente ${LIXEIRA_DIAS} dias após a exclusão.`;
-        container.appendChild(aviso);
-      }
-
-      lista.forEach((imovel) => {
-        const item = document.createElement('div');
-        item.className = 'list-item'
-          + (isArquivado(imovel) ? ' is-arquivado' : '')
-          + (isNaLixeira(imovel) ? ' is-lixeira' : '');
-
-        let stateBadge = '';
-        if (isArquivado(imovel)) {
-          stateBadge = '<span class="state-badge arquivado"><iconify-icon icon="mdi:archive-outline"></iconify-icon> Arquivado</span>';
-        } else if (isNaLixeira(imovel)) {
-          stateBadge = '<span class="state-badge lixeira"><iconify-icon icon="mdi:delete-outline"></iconify-icon> Lixeira</span>';
-        }
-
-        let acoesHTML;
-        let expiraHTML = '';
-        if (listView === 'lixeira') {
-          const restantes = diasRestantesLixeira(imovel);
-          acoesHTML = `
-            <button class="icon-btn" onclick="restoreProperty('${imovel.id}')" title="Restaurar"><iconify-icon icon="mdi:restore" style="color: #27ae60;"></iconify-icon></button>
-            <button class="icon-btn" onclick="destroyProperty('${imovel.id}')" title="Apagar definitivamente"><iconify-icon icon="mdi:delete-forever" style="color: #e74c3c;"></iconify-icon></button>`;
-          expiraHTML = `<div class="list-item-expira"><iconify-icon icon="mdi:clock-alert-outline"></iconify-icon> Apaga definitivamente em ${restantes} ${restantes === 1 ? 'dia' : 'dias'}</div>`;
-        } else if (listView === 'arquivados') {
-          acoesHTML = `
-            <button class="icon-btn" onclick="unarchiveProperty('${imovel.id}')" title="Publicar no site novamente"><iconify-icon icon="mdi:archive-arrow-up-outline" style="color: #27ae60;"></iconify-icon></button>
-            <button class="icon-btn" onclick="duplicateProperty('${imovel.id}')" title="Duplicar"><iconify-icon icon="mdi:content-copy"></iconify-icon></button>
-            <button class="icon-btn" onclick="openForm('${imovel.id}')" title="Editar"><iconify-icon icon="mdi:pencil"></iconify-icon></button>
-            <button class="icon-btn" onclick="deleteProperty('${imovel.id}')" title="Mover para a lixeira"><iconify-icon icon="mdi:delete" style="color: #e74c3c;"></iconify-icon></button>`;
-        } else {
-          acoesHTML = `
-            <button class="icon-btn" onclick="moveUp('${imovel.id}')" title="Mover para cima"><iconify-icon icon="mdi:arrow-up"></iconify-icon></button>
-            <button class="icon-btn" onclick="moveDown('${imovel.id}')" title="Mover para baixo"><iconify-icon icon="mdi:arrow-down"></iconify-icon></button>
-            <button class="icon-btn" onclick="duplicateProperty('${imovel.id}')" title="Duplicar"><iconify-icon icon="mdi:content-copy"></iconify-icon></button>
-            <button class="icon-btn" onclick="archiveProperty('${imovel.id}')" title="Arquivar (sai do site)"><iconify-icon icon="mdi:archive-outline"></iconify-icon></button>
-            <button class="icon-btn" onclick="openForm('${imovel.id}')" title="Editar"><iconify-icon icon="mdi:pencil"></iconify-icon></button>
-            <button class="icon-btn" onclick="deleteProperty('${imovel.id}')" title="Mover para a lixeira"><iconify-icon icon="mdi:delete" style="color: #e74c3c;"></iconify-icon></button>`;
-        }
-
-        item.innerHTML = `
-          <img src="${(imovel.imagens && imovel.imagens.length > 0) ? imovel.imagens[0] : imovel.imagem}" class="list-item-img" alt="Foto">
-          <div class="list-item-info">
-            <div class="list-item-title">${stateBadge}${imovel.nome} <span style="font-size:0.8rem; font-weight:normal; color:#888;">(Cód. ${formatId(imovel.id)})</span></div>
-            <div class="list-item-price">${imovel.preco} - ${imovel.localizacao}</div>
-            ${expiraHTML}
-          </div>
-          <div class="list-item-actions">${acoesHTML}</div>
-          <div class="list-item-press-bar"></div>
-        `;
-        container.appendChild(item);
-        if (listView === 'ativos') attachLongPress(item, imovel.id);
-      });
-    }
+    function renderList() { AdminBoard.render(); }
 
     function archiveProperty(id) {
       const imovel = imoveisData.find(i => i.id === id);
@@ -1646,134 +1622,8 @@
       markDirty();
     }
 
-    function attachLongPress(el, id) {
-      const HOLD_MS = 3000;
-      const MOVE_TOLERANCE = 10;
-      const bar = el.querySelector('.list-item-press-bar');
-      let pressTimer = null;
-      let startX = 0, startY = 0;
-
-      function start(e) {
-        if (e.target.closest('.list-item-actions')) return;
-        if (e.pointerType === 'mouse' && e.button !== 0) return;
-        startX = e.clientX;
-        startY = e.clientY;
-        el.classList.add('pressing');
-        bar.style.transition = `width ${HOLD_MS}ms linear`;
-        requestAnimationFrame(() => { bar.style.width = '100%'; });
-        pressTimer = setTimeout(() => {
-          cancelPress();
-          openGallery(id);
-        }, HOLD_MS);
-      }
-
-      function move(e) {
-        if (!pressTimer) return;
-        if (Math.abs(e.clientX - startX) > MOVE_TOLERANCE || Math.abs(e.clientY - startY) > MOVE_TOLERANCE) {
-          cancelPress();
-        }
-      }
-
-      function cancelPress() {
-        clearTimeout(pressTimer);
-        pressTimer = null;
-        el.classList.remove('pressing');
-        bar.style.transition = 'none';
-        bar.style.width = '0%';
-      }
-
-      el.addEventListener('pointerdown', start);
-      el.addEventListener('pointermove', move);
-      el.addEventListener('pointerup', cancelPress);
-      el.addEventListener('pointerleave', cancelPress);
-      el.addEventListener('pointercancel', cancelPress);
-    }
-
-    // Move dentro da aba visível: troca com o vizinho da mesma lista, ignorando
-    // arquivados/lixeira que estejam intercalados em imoveisData.
-    function moveNaView(id, direcao) {
-      const lista = getViewList();
-      const pos = lista.findIndex(i => i.id === id);
-      const alvo = pos + direcao;
-      if (pos === -1 || alvo < 0 || alvo >= lista.length) return;
-
-      const a = imoveisData.indexOf(lista[pos]);
-      const b = imoveisData.indexOf(lista[alvo]);
-      [imoveisData[a], imoveisData[b]] = [imoveisData[b], imoveisData[a]];
-      renderList();
-      markDirty();
-    }
-
-    function moveUp(id) { moveNaView(id, -1); }
-    function moveDown(id) { moveNaView(id, 1); }
-
-    let gallerySortable = null;
-
-    function openGallery(highlightId) {
-      renderGallery();
-      document.getElementById('gallery-dialog').showModal();
-      if (highlightId) {
-        setTimeout(() => {
-          const card = document.querySelector(`#gallery-grid .gallery-card[data-id="${highlightId}"]`);
-          if (card) {
-            card.scrollIntoView({ block: 'center', behavior: 'instant' });
-            card.classList.add('highlight-pulse');
-            setTimeout(() => card.classList.remove('highlight-pulse'), 1200);
-          }
-        }, 50);
-      }
-    }
-
-    function closeGalleryDialog() {
-      document.getElementById('gallery-dialog').close();
-    }
-
-    function renderGallery() {
-      const grid = document.getElementById('gallery-grid');
-      grid.innerHTML = '';
-
-      // Só os imóveis publicados entram na reorganização — a ordem do site é a deles
-      const ativos = imoveisData.filter(isAtivo);
-
-      ativos.forEach((imovel, idx) => {
-        const card = document.createElement('div');
-        card.className = 'gallery-card';
-        card.dataset.id = imovel.id;
-        card.innerHTML = `
-          <span class="gallery-card-num">${idx + 1}</span>
-          <img src="${(imovel.imagens && imovel.imagens.length > 0) ? imovel.imagens[0] : imovel.imagem}" alt="">
-          <div class="gallery-card-name">${imovel.nome}</div>
-        `;
-        grid.appendChild(card);
-      });
-
-      if (gallerySortable) gallerySortable.destroy();
-      gallerySortable = new Sortable(grid, {
-        animation: 150,
-        ghostClass: 'sortable-ghost',
-        chosenClass: 'sortable-chosen',
-        scroll: true,
-        scrollSensitivity: 80,
-        scrollSpeed: 12,
-        onEnd: function () {
-          const newOrder = Array.from(grid.children).map(el => el.dataset.id);
-          // Reencaixa os ativos reordenados nas mesmas posições que ocupavam,
-          // preservando arquivados e lixeira onde estão.
-          const posicoes = [];
-          imoveisData.forEach((imovel, idx) => { if (isAtivo(imovel)) posicoes.push(idx); });
-          const reordenados = newOrder
-            .map(id => imoveisData.find(imovel => imovel.id === id))
-            .filter(Boolean);
-          posicoes.forEach((posicao, i) => {
-            if (reordenados[i]) imoveisData[posicao] = reordenados[i];
-          });
-
-          grid.querySelectorAll('.gallery-card-num').forEach((el, idx) => { el.textContent = idx + 1; });
-          renderList();
-          markDirty();
-        }
-      });
-    }
+    // Reordering is now in the catalog itself, including multi-selection.
+    function openGallery() { AdminBoard.startReordering(); }
 
     function setToggle(group, value) {
       if (group === 'categoria') {
@@ -2117,121 +1967,7 @@
       setImageTag(index, (input.value || '').trim());
     }
 
-    let dragImageIndex = null;
-
-    function renderImagePreviews() {
-      const container = document.getElementById('image-preview-container');
-      container.innerHTML = '';
-      currentImages.forEach((src, index) => {
-        const tag = currentImageTags[index] || '';
-        const div = document.createElement('div');
-        div.className = 'img-thumb';
-        div.draggable = true;
-        div.dataset.index = index;
-        div.addEventListener('dragstart', handleImageDragStart);
-        div.addEventListener('dragover', handleImageDragOver);
-        div.addEventListener('dragleave', handleImageDragLeave);
-        div.addEventListener('drop', handleImageDrop);
-        div.addEventListener('dragend', handleImageDragEnd);
-        div.innerHTML = `
-          <span class="img-thumb-grip"><iconify-icon icon="lucide:grip-vertical"></iconify-icon></span>
-          <img src="${src}" alt="Foto ${index + 1}">
-          <button onclick="removeImage(${index})" type="button" class="img-remove-btn" aria-label="Remover foto">&times;</button>
-          <button type="button" class="img-tag-btn${tag ? ' tagged' : ''}" onclick="toggleTagMenu(${index}, event)">
-            <iconify-icon icon="mdi:tag-outline"></iconify-icon><span>${escapeHtml(tag) || 'Marcar cômodo'}</span>
-          </button>
-          <div class="img-tag-menu" id="img-tag-menu-${index}">
-            ${tagMenuOptionsHTML(index)}
-          </div>
-        `;
-        container.appendChild(div);
-      });
-    }
-
-    // Move a imagem de fromIndex para o "vão" toGap (0 = início, length = fim, N = entre a N-1 e a N)
-    function moveImage(fromIndex, toGap) {
-      const [movedImage] = currentImages.splice(fromIndex, 1);
-      const [movedTag] = currentImageTags.splice(fromIndex, 1);
-      let insertAt = fromIndex < toGap ? toGap - 1 : toGap;
-      insertAt = Math.max(0, Math.min(insertAt, currentImages.length));
-      currentImages.splice(insertAt, 0, movedImage);
-      currentImageTags.splice(insertAt, 0, movedTag);
-    }
-
-    function clearImageDropIndicators() {
-      document.querySelectorAll('.img-thumb.insert-before, .img-thumb.insert-after').forEach(el => {
-        el.classList.remove('insert-before', 'insert-after');
-      });
-      const grid = document.getElementById('image-preview-container');
-      if (grid) grid.classList.remove('drag-append-active');
-    }
-
-    function handleImageDragStart(e) {
-      dragImageIndex = Number(e.currentTarget.dataset.index);
-      e.dataTransfer.effectAllowed = 'move';
-      e.dataTransfer.setData('text/plain', String(dragImageIndex));
-      e.currentTarget.classList.add('dragging');
-    }
-
-    function handleImageDragOver(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      e.dataTransfer.dropEffect = 'move';
-      const thumb = e.currentTarget;
-      const hoverIndex = Number(thumb.dataset.index);
-      clearImageDropIndicators();
-      if (hoverIndex === dragImageIndex) return;
-      const rect = thumb.getBoundingClientRect();
-      const isAfter = (e.clientX - rect.left) > rect.width / 2;
-      thumb.classList.add(isAfter ? 'insert-after' : 'insert-before');
-    }
-
-    function handleImageDragLeave(e) {
-      e.currentTarget.classList.remove('insert-before', 'insert-after');
-    }
-
-    function handleImageDrop(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      const thumb = e.currentTarget;
-      const hoverIndex = Number(thumb.dataset.index);
-      const isAfter = thumb.classList.contains('insert-after');
-      clearImageDropIndicators();
-      if (dragImageIndex === null || hoverIndex === dragImageIndex) return;
-      moveImage(dragImageIndex, hoverIndex + (isAfter ? 1 : 0));
-      dragImageIndex = null;
-      renderImagePreviews();
-    }
-
-    function handleImageDragEnd() {
-      document.querySelectorAll('.img-thumb.dragging').forEach(el => el.classList.remove('dragging'));
-      clearImageDropIndicators();
-      dragImageIndex = null;
-    }
-
-    // Soltar no espaço vazio da grade (fora de qualquer miniatura) move a foto para o final
-    function handleImageGridDragOver(e) {
-      e.preventDefault();
-      e.dataTransfer.dropEffect = 'move';
-      e.currentTarget.classList.add('drag-append-active');
-    }
-
-    function handleImageGridDragLeave(e) {
-      if (e.target === e.currentTarget) e.currentTarget.classList.remove('drag-append-active');
-    }
-
-    function handleImageGridDrop(e) {
-      e.preventDefault();
-      e.currentTarget.classList.remove('drag-append-active');
-      if (dragImageIndex === null) return;
-      moveImage(dragImageIndex, currentImages.length);
-      dragImageIndex = null;
-      renderImagePreviews();
-    }
-
-    document.getElementById('image-preview-container').addEventListener('dragover', handleImageGridDragOver);
-    document.getElementById('image-preview-container').addEventListener('dragleave', handleImageGridDragLeave);
-    document.getElementById('image-preview-container').addEventListener('drop', handleImageGridDrop);
+    function renderImagePreviews() { AdminPhotos.render(); }
 
     function toggleTagMenu(index, event) {
       event.stopPropagation();
@@ -2264,6 +2000,7 @@
     });
 
     function removeImage(index) {
+      AdminPhotos.beforeRemove(index);
       currentImages.splice(index, 1);
       currentImageTags.splice(index, 1);
       renderImagePreviews();
@@ -2377,7 +2114,7 @@
     ];
 
     function escapeHtml(str) {
-      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      return String(str ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
     }
 
     // Converte o markdown do editor (negrito, itálico, sublinhado, destaque e ícones) em HTML,
@@ -2840,80 +2577,28 @@
 
     // ---- Índice de qualidade do anúncio ----
     function calcularQualidade() {
-      const tipo = (document.getElementById('f-tipo').value || '').trim().toLowerCase();
-      const fotos = currentImages.length;
-      const descricao = (currentDescricaoMarkdown || '').trim();
-      const preco = (document.getElementById('f-preco').value || '').trim();
-      const cidade = (document.getElementById('f-cidade').value || '').trim();
-      const bairro = (document.getElementById('f-bairro').value || '').trim();
-      const endereco = (document.getElementById('f-endereco').value || '').trim();
-      const youtube = (document.getElementById('f-youtube').value || '').trim();
-      const areaUtil = (document.getElementById('f-area-util').value || '').trim();
-      const areaTotal = (document.getElementById('f-area-total').value || '').trim();
-
-      let score = 0;
-      const detalhes = [];
-
-      let fotosIdeal = 15;
-      let fotosMin = 5;
-      if (tipo.includes('terreno') || tipo.includes('lote')) {
-        fotosIdeal = 3;
-        fotosMin = 1;
-      } else if (tipo.includes('comercial') || tipo.includes('prédio') || tipo.includes('loja')) {
-        fotosIdeal = 8;
-        fotosMin = 3;
-      }
-
-      const fotosOk = fotos >= fotosIdeal;
-      score += fotosOk ? 2 : (fotos >= fotosMin ? 1 : 0);
-      detalhes.push({ ok: fotos >= fotosMin, label: fotosOk ? 'Boa quantidade de fotos' : `Adicione mais fotos (ideal: ${fotosIdeal} ou mais)` });
-
-      const descOk = descricao.length >= 150;
-      score += descOk ? 2 : (descricao.length >= 50 ? 1 : 0);
-      detalhes.push({ ok: descricao.length >= 50, label: descOk ? 'Descrição completa' : 'Descrição curta — capriche nos detalhes' });
-
-      score += preco ? 1 : 0;
-      detalhes.push({ ok: !!preco, label: 'Preço preenchido' });
-
-      const localizacaoOk = !!(cidade && bairro && endereco);
-      score += localizacaoOk ? 1 : 0;
-      detalhes.push({ ok: localizacaoOk, label: 'Localização completa' });
-
-      const areaOk = !!(areaUtil || areaTotal);
-      score += areaOk ? 1 : 0;
-      detalhes.push({ ok: areaOk, label: 'Área informada (útil ou total)' });
-
-      score += selectedFeaturesImovel.length > 0 ? 1 : 0;
-      detalhes.push({ ok: selectedFeaturesImovel.length > 0, label: 'Características do imóvel selecionadas' });
-
-      score += selectedFeaturesCondominio.length > 0 ? 1 : 0;
-      detalhes.push({ ok: selectedFeaturesCondominio.length > 0, label: 'Características do condomínio selecionadas' });
-
-      score += selectedBadges.length > 0 ? 1 : 0;
-      detalhes.push({ ok: selectedBadges.length > 0, label: 'Badges selecionados' });
-
-      score += youtube ? 1 : 0;
-      detalhes.push({ ok: !!youtube, label: 'Vídeo do YouTube adicionado' });
-
-      return { score, detalhes };
+      const value = id => document.getElementById(id).value;
+      return AdminCore.quality({
+        nome: value('f-nome'), tipo: value('f-tipo'), imagens: currentImages,
+        descricao: currentDescricaoMarkdown, preco: value('f-preco'),
+        valorVenda: value('f-valor-venda'), valorAluguel: value('f-valor-aluguel'),
+        cidade: value('f-cidade').trim(), bairro: value('f-bairro').trim(),
+        areaUtil: value('f-area-util'), areaTotal: value('f-area-total'),
+        caracteristicas: selectedFeaturesImovel, caracteristicasCondominio: selectedFeaturesCondominio,
+        youtube: value('f-youtube')
+      });
     }
 
     function recalcQualidade() {
       const { score, detalhes } = calcularQualidade();
-      document.getElementById('quality-score-value').innerText = score + '/10';
+      const format = value => value.toLocaleString('pt-BR', { maximumFractionDigits: 1 });
+      document.getElementById('quality-score-value').innerText = format(score) + '/10';
+      document.getElementById('quality-progress').setAttribute('aria-valuenow', score);
       const fill = document.getElementById('quality-bar-fill');
-      fill.style.width = (score * 10) + '%';
-      
-      if (score <= 4) {
-        fill.style.backgroundColor = '#e74c3c';
-      } else if (score <= 7) {
-        fill.style.backgroundColor = '#f1c40f';
-      } else {
-        fill.style.backgroundColor = '#2ecc71';
-      }
-
+      fill.style.width = Math.min(100, score * 10) + '%';
+      fill.style.backgroundColor = score <= 4 ? '#b45135' : score <= 7 ? '#a47721' : '#33805b';
       document.getElementById('quality-details').innerHTML = detalhes.map(d =>
-        `<li class="${d.ok ? 'ok' : 'missing'}"><iconify-icon icon="${d.ok ? 'mdi:check-circle' : 'mdi:circle-outline'}"></iconify-icon> ${d.label}</li>`
+        `<li class="${d.ok ? 'ok' : d.optional ? 'optional' : 'missing'}"><iconify-icon icon="${d.ok ? 'mdi:check-circle' : d.optional ? 'mdi:plus-circle-outline' : 'mdi:circle-outline'}"></iconify-icon> ${d.label}<span class="quality-points">${format(d.points)}/${format(d.max)}</span></li>`
       ).join('');
     }
 
@@ -2937,6 +2622,7 @@
     }
 
     function openForm(id = null) {
+      AdminPhotos.reset();
       currentPendingId = null;
       document.getElementById('form-title').innerText = id ? 'Editar Imóvel' : 'Novo Imóvel';
 
@@ -3061,6 +2747,7 @@
       }
 
       document.getElementById('property-dialog').showModal();
+      document.querySelector('#property-dialog .dialog-body').scrollTop = 0;
       updateToggleUI();
       recalcQualidade();
     }
@@ -3125,6 +2812,7 @@
         if (index > -1) {
           // Editar não muda o estado: arquivado continua arquivado, lixeira continua na lixeira
           const anterior = imoveisData[index];
+          if (Object.hasOwn(anterior, 'isDefault')) imovel.isDefault = anterior.isDefault;
           if (anterior.arquivado) {
             imovel.arquivado = true;
             imovel.arquivadoEm = anterior.arquivadoEm;
@@ -3281,42 +2969,33 @@
       }
     }
 
-    // PIN GATE
+    // PIN GATE: same PIN and session behavior, now validated by the animation.
     (function () {
       const ADMIN_PIN = '15182223';
       const overlay = document.getElementById('pin-gate-overlay');
-      const input = document.getElementById('pin-gate-input');
-      const errorEl = document.getElementById('pin-gate-error');
-      const btn = document.getElementById('pin-gate-btn');
-
-      function unlock() {
-        sessionStorage.setItem('jm_admin_pin_ok', '1');
+      window.jmVerifyAdminPin = code => code === ADMIN_PIN;
+      window.jmUnlockAdmin = function () {
         overlay.classList.add('hidden');
+        document.getElementById('admin-content').inert = false;
         document.body.classList.remove('pin-locked');
-      }
-
-      function tryUnlock() {
-        if (input.value === ADMIN_PIN) {
-          unlock();
-        } else {
-          errorEl.textContent = 'PIN incorreto. Tente novamente.';
+        // Remembering the session is optional; blocked/full storage cannot
+        // prevent a correctly validated PIN from opening the admin.
+        try { sessionStorage.setItem('jm_admin_pin_ok', '1'); } catch (_) { /* Access is already open. */ }
+      };
+      let remembered = false;
+      try { remembered = sessionStorage.getItem('jm_admin_pin_ok') === '1'; } catch (_) { /* Ask for the PIN normally. */ }
+      if (remembered) window.jmUnlockAdmin();
+      // The static fallback remains usable if the optional animation bundle fails.
+      document.getElementById('pin-fallback-form').addEventListener('submit', event => {
+        event.preventDefault();
+        const input = document.getElementById('pin-gate-input');
+        if (window.jmVerifyAdminPin(input.value)) window.jmUnlockAdmin();
+        else {
+          document.getElementById('pin-fallback-error').textContent = 'PIN incorreto. Tente novamente.';
           input.value = '';
           input.focus();
         }
-      }
-
-      if (sessionStorage.getItem('jm_admin_pin_ok') === '1') {
-        unlock();
-      } else {
-        input.focus();
-        btn.addEventListener('click', tryUnlock);
-        input.addEventListener('keydown', function (e) {
-          if (e.key === 'Enter') tryUnlock();
-        });
-        input.addEventListener('input', function () {
-          errorEl.textContent = '';
-        });
-      }
+      });
     })();
   </script>
 </body>

@@ -1,3 +1,6 @@
 .DS_Store
 images/
 /images
+
+node_modules/
+.impeccable/review/
