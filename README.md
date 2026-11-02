@@ -19,9 +19,11 @@ barra superior e arraste pela alça para movê-las juntas com animação, manten
 a ordem e os cômodos. Os controles de início/fim também funcionam pelo teclado.
 A primeira foto é a capa; use **Salvar** no editor para manter a nova ordem.
 O PIN tem um controle **Mostrar PIN / Ocultar PIN** para conferir os dígitos.
-O acesso usa o valor atual do campo e aceita correções imediatas, sem esperar
-a animação terminar. A digitação anterior ao carregamento do componente é
-preservada; falhas ao lembrar a sessão não impedem uma entrada válida.
+A validação usa o valor atual do campo e aceita correções imediatas. Após um
+PIN válido, a animação mostra **Verificado** por um breve instante e o pop-up
+fecha em cerca de um segundo, com fechamento de segurança independente da
+animação. A digitação anterior ao carregamento do componente é preservada;
+falhas ao lembrar a sessão não impedem uma entrada válida.
 A nota de qualidade usa uma escala de 0 a 10:
 fotos (3), descrição (2), preço (1,5), cidade e bairro (1,5), área (1) e
 nome e tipo (1). Vídeo e características somam até 1 ponto de bônus para

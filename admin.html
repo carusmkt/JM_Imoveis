@@ -2974,13 +2974,32 @@
       const ADMIN_PIN = '15182223';
       const overlay = document.getElementById('pin-gate-overlay');
       window.jmVerifyAdminPin = code => code === ADMIN_PIN;
-      window.jmUnlockAdmin = function () {
-        overlay.classList.add('hidden');
-        document.getElementById('admin-content').inert = false;
-        document.body.classList.remove('pin-locked');
+      window.jmUnlockAdmin = function (showConfirmation = false) {
+        const openAdmin = () => {
+          overlay.classList.add('hidden');
+          document.getElementById('admin-content').inert = false;
+          document.body.classList.remove('pin-locked');
+        };
         // Remembering the session is optional; blocked/full storage cannot
         // prevent a correctly validated PIN from opening the admin.
-        try { sessionStorage.setItem('jm_admin_pin_ok', '1'); } catch (_) { /* Access is already open. */ }
+        try { sessionStorage.setItem('jm_admin_pin_ok', '1'); } catch (_) { /* Continue normally. */ }
+        if (!showConfirmation) { openAdmin(); return; }
+
+        // Validation has already succeeded. Allow the goo capsule to say
+        // "Verificado", then dismiss the presentation independently of its
+        // spring/animation loop. The timeout also handles disabled animations.
+        let finished = false;
+        const finish = () => {
+          if (finished) return;
+          finished = true;
+          window.clearTimeout(fallbackTimer);
+          overlay.removeEventListener('animationend', animationFinished);
+          openAdmin();
+        };
+        const animationFinished = event => { if (event.target === overlay) finish(); };
+        const fallbackTimer = window.setTimeout(finish, 1050);
+        overlay.addEventListener('animationend', animationFinished);
+        overlay.classList.add('pin-gate-confirming');
       };
       let remembered = false;
       try { remembered = sessionStorage.getItem('jm_admin_pin_ok') === '1'; } catch (_) { /* Ask for the PIN normally. */ }

@@ -48,7 +48,7 @@ async function type(input, value) {
   });
 }
 
-test('the correct PIN opens immediately without waiting for animation timers', async () => {
+test('the correct PIN validates immediately without waiting for animation timers', async () => {
   const ui = await mount();
   for (let length = 1; length <= 8; length++) await type(ui.input, '12345678'.slice(0, length));
   assert.equal(ui.opened, 1);
@@ -161,3 +161,53 @@ for (const failure of ['read', 'write']) {
     assert.equal(bodyClasses.has('pin-locked'), false);
   });
 }
+
+function confirmationGate(blockStorage = false) {
+  const page = new JSDOM('<!doctype html><body class="pin-locked"><div id="pin-gate-overlay"><span id="confirmation">Verificado</span></div><main id="admin-content" inert></main><form id="pin-fallback-form"></form>', { url: 'http://localhost/' });
+  const callbacks = new Map();
+  let nextTimer = 0;
+  page.window.setTimeout = (callback, delay) => { callbacks.set(++nextTimer, { callback, delay }); return nextTimer; };
+  page.window.clearTimeout = timer => callbacks.delete(timer);
+  const storage = {
+    value: null,
+    getItem() { return this.value; },
+    setItem(key, value) { if (blockStorage) throw new Error('Storage blocked'); this.value = value; }
+  };
+  const context = { window: page.window, document: page.window.document, sessionStorage: storage };
+  vm.runInNewContext(gateScript, context);
+  return { page, storage, callbacks, overlay: page.window.document.getElementById('pin-gate-overlay'), content: page.window.document.getElementById('admin-content') };
+}
+test('successful authentication shows confirmation before dismissing the overlay', () => {
+  const { page, storage, callbacks, overlay, content } = confirmationGate();
+  page.window.jmUnlockAdmin(true);
+  assert.equal(storage.value, '1');
+  assert(overlay.classList.contains('pin-gate-confirming'));
+  assert.equal(overlay.classList.contains('hidden'), false);
+  page.window.document.getElementById('confirmation').dispatchEvent(new page.window.Event('animationend', { bubbles: true }));
+  assert.equal(overlay.classList.contains('hidden'), false, 'digit/caret animation must not dismiss the confirmation');
+  overlay.dispatchEvent(new page.window.Event('animationend'));
+  assert(overlay.classList.contains('hidden'));
+  assert.equal(content.inert, false);
+  assert.equal(callbacks.size, 0);
+  page.window.close();
+});
+test('confirmation closes even if animations never finish and session storage is blocked', () => {
+  const { page, callbacks, overlay, content } = confirmationGate(true);
+  assert.doesNotThrow(() => page.window.jmUnlockAdmin(true));
+  const timer = [...callbacks.values()][0];
+  assert.equal(timer.delay, 1050);
+  timer.callback();
+  assert(overlay.classList.contains('hidden'));
+  assert.equal(content.inert, false);
+  page.window.close();
+});
+test('the originating submit click cannot bubble up and dismiss confirmation early', () => {
+  const { page, callbacks, overlay } = confirmationGate();
+  page.window.jmUnlockAdmin(true);
+  overlay.click();
+  assert.equal(overlay.classList.contains('hidden'), false);
+  [...callbacks.values()][0].callback();
+  assert(overlay.classList.contains('hidden'));
+  assert.equal(callbacks.size, 0);
+  page.window.close();
+});

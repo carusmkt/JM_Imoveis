@@ -148,6 +148,11 @@ input[type="checkbox"] { width: 17px; height: 17px; accent-color: var(--color-le
 .pin-gate-card p { color: var(--admin-muted); }
 .pin-gate-card h2 { margin-top: 12px; }
 .pin-gate-card .otp { margin-top: 20px; }
+.pin-gate-overlay.pin-gate-confirming { animation: pin-confirm-dismiss 1s ease forwards; }
+@keyframes pin-confirm-dismiss {
+  0%, 84% { opacity: 1; }
+  100% { opacity: 0; }
+}
 @media (min-width: 1500px) {
   .property-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .featured-tray .property-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -204,5 +209,6 @@ input[type="checkbox"] { width: 17px; height: 17px; accent-color: var(--color-le
   .card-action, .drag-handle { min-width: 38px; min-height: 40px; }
 }
 @media (prefers-reduced-motion: reduce) {
+  .pin-gate-overlay.pin-gate-confirming { animation: none !important; }
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
