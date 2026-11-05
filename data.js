@@ -2306,9 +2306,11 @@ window.imoveis = [
     "areaUtil": "251 m²",
     "areaTotal": "",
     "imagens": [
+      "images/0020-1793902192210-2.jpg",
+      "images/0020-1793902229893-15.jpg",
+      "images/0020-1793902240852-19.jpg",
       "images/0020-1793902186581-0.jpg",
       "images/0020-1793902189600-1.jpg",
-      "images/0020-1793902192210-2.jpg",
       "images/0020-1793902195386-3.jpg",
       "images/0020-1793902198032-4.jpg",
       "images/0020-1793902200692-5.jpg",
@@ -2321,11 +2323,9 @@ window.imoveis = [
       "images/0020-1793902221309-12.jpg",
       "images/0020-1793902224262-13.jpg",
       "images/0020-1793902226413-14.jpg",
-      "images/0020-1793902229893-15.jpg",
       "images/0020-1793902232806-16.jpg",
       "images/0020-1793902235214-17.jpg",
       "images/0020-1793902237934-18.jpg",
-      "images/0020-1793902240852-19.jpg",
       "images/0020-1793902243719-20.jpg",
       "images/0020-1793902246406-21.jpg",
       "images/0020-1793902249235-22.jpg"
@@ -2355,7 +2355,7 @@ window.imoveis = [
       "",
       ""
     ],
-    "imagem": "images/0020-1793902186581-0.jpg",
+    "imagem": "images/0020-1793902192210-2.jpg",
     "youtube": "https://www.youtube.com/watch?v=H_OPyzWJ46I&t=3s",
     "badges": [],
     "destaqueBadge": "",
