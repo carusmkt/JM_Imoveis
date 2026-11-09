@@ -13,6 +13,17 @@ checkboxes para mover vários imóveis juntos, pela alça ou pelos controles
 de posição. O grupo mantém sua ordem e a última organização pode ser desfeita.
 As alterações entram no site ao usar **Sincronizar**, como antes.
 
+O admin guarda o catálogo e as fotos ainda não enviadas neste navegador
+(IndexedDB, com alternativa em localStorage). Ao reabrir a página, recupera
+as alterações pendentes e consulta o catálogo atual no GitHub, sem depender
+do tempo de atualização do site. Fotos e dados são publicados em um único
+commit; uma falha mantém os cadastros e fotos originais na lista para tentar
+novamente. Durante o envio, a edição fica temporariamente bloqueada.
+Alterações independentes de outras sessões são preservadas. Se duas sessões
+alterarem o mesmo imóvel ou reorganizarem a lista de maneiras diferentes,
+a sincronização para e informa o conflito, sem sobrescrever as versões.
+Rascunhos são locais ao navegador; não são um backup entre dispositivos.
+
 O editor tem uma visualização de fotos inteiras, com navegação por setas e
 fechamento por Escape. Nas miniaturas, marque várias fotos nos checkboxes da
 barra superior e arraste pela alça para movê-las juntas com animação, mantendo
@@ -33,6 +44,6 @@ badges, vídeo e endereço exato não são obrigatórios para a nota máxima.
 A página continua estática. O componente React `OneTimeCode` é compilado
 separadamente e o bundle em `admin/dist/` deve ser incluído na publicação.
 Para alterar esse componente: `npm ci` e `npm run build:admin`.
-Para verificar as regras de organização e qualidade: `npm test`.
+Para verificar organização, qualidade, login e sincronização: `npm test`.
 
 Fontes e licenças: [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

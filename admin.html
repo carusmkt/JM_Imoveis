@@ -675,6 +675,7 @@
   <link rel="stylesheet" href="admin/dist/admin-ui.css">
   <script defer src="admin/dist/admin-ui.js"></script>
   <script src="admin/core.js"></script>
+  <script src="admin/sync.js"></script>
   <script src="admin/board.js"></script>
   <script src="admin/photos.js"></script>
   <script src="admin/motion.js"></script>
@@ -1222,6 +1223,19 @@
   <script>
     let imoveisData = [];
     let syncState = 'synced';
+    let baselineData = null;
+    let adminReady = false;
+    let catalogLoading = false;
+    let syncInProgress = false;
+    let dataRevision = 0;
+    let draftWrites = Promise.resolve();
+    let pendingDraftWrites = 0;
+    let draftSaveFailed = false;
+    let preparedPublication = null;
+    const draftStore = AdminSync.createDraftStore();
+    const draftVersions = new Map();
+    const draftWriter = Math.random().toString(36).slice(2);
+    let draftWriteSequence = 0;
     let githubConfig = {
       owner: localStorage.getItem('gh_owner') || '',
       repo: localStorage.getItem('gh_repo') || '',
@@ -1338,28 +1352,106 @@
       renderList();
     }
 
-    // Inicializa a lista a partir do window.imoveis (carregado do data.js)
-    if (window.imoveis) {
-      imoveisData = JSON.parse(JSON.stringify(window.imoveis)); // Clone profundo
-      const expirados = purgarLixeiraExpirada();
-      const renumerados = migrarIdsSequenciais();
-      renderList();
+    function draftKey() {
+      return `${githubConfig.owner.toLowerCase()}/${githubConfig.repo.toLowerCase()}`;
+    }
 
-      const avisos = [];
-      if (expirados > 0) {
-        avisos.push(`${expirados} ${expirados === 1 ? 'imóvel foi apagado definitivamente' : 'imóveis foram apagados definitivamente'} após 30 dias na lixeira.`);
-      }
-      if (renumerados > 0) {
-        avisos.push(`${renumerados} ${renumerados === 1 ? 'imóvel teve o código ajustado' : 'imóveis tiveram o código ajustado'} para o formato 0001.`);
-      }
+    function persistDraft(dirty = syncState !== 'synced') {
+      const key = draftKey();
+      const snapshot = AdminSync.clone({
+        properties: imoveisData, base: baselineData, dirty,
+        prepared: preparedPublication, updatedAt: Date.now(), version: `${draftWriter}:${++draftWriteSequence}`
+      });
+      pendingDraftWrites++;
+      draftWrites = draftWrites.catch(() => {}).then(async () => {
+        await draftStore.save(key, snapshot, draftVersions.get(key));
+        draftVersions.set(key, snapshot.version);
+      });
+      draftWrites.then(() => { draftSaveFailed = false; }, error => {
+        draftSaveFailed = dirty;
+        if (dirty) showMsg(error.code === 'DRAFT_CONFLICT' ? error.message : 'Não foi possível guardar as alterações neste navegador. Mantenha esta página aberta e tente sincronizar.', 'error');
+      }).finally(() => { pendingDraftWrites--; });
+      return draftWrites;
+    }
 
-      if (avisos.length > 0) {
-        markDirty();
-        showMsg(avisos.join(' ') + ' Sincronize para confirmar.', 'success');
-      } else {
-        setSyncState('synced');
+    function lockCatalog(locked) {
+      document.getElementById('list-panel').inert = locked;
+      document.getElementById('config-panel').inert = locked;
+      document.getElementById('property-dialog').inert = locked;
+      document.getElementById('btn-sync').disabled = locked;
+    }
+
+    async function initializeAdminData(initialDraft = null) {
+      if (catalogLoading) return;
+      catalogLoading = true;
+      adminReady = false;
+      lockCatalog(true);
+      document.getElementById('btn-sync-label').textContent = 'Carregando imóveis...';
+      try {
+        const key = draftKey();
+        const savedDraft = await draftStore.load(key);
+        draftVersions.set(key, savedDraft?.version ?? savedDraft?.updatedAt);
+        const draft = savedDraft || initialDraft;
+        let remote = null;
+        if (githubConfig.owner && githubConfig.repo && githubConfig.token) {
+          try { remote = (await AdminSync.createClient(githubConfig).read()).properties; }
+          catch (error) {
+            showMsg('Não foi possível consultar o catálogo atual. As alterações serão conferidas ao sincronizar. ' + formatGithubError(error.message), 'error');
+          }
+        }
+        const published = remote || (Array.isArray(window.imoveis) ? window.imoveis : null);
+        if (draft) {
+          AdminSync.validate(draft.properties);
+          AdminSync.validate(draft.base);
+        }
+        // A completed publication may have lost its response before this page closed.
+        const confirmed = remote && draft?.prepared
+          && JSON.stringify(remote) === JSON.stringify(draft.prepared.properties)
+          && JSON.stringify(draft.properties) === JSON.stringify(draft.prepared.source);
+        const restored = draft && draft.dirty && !confirmed;
+        if (restored) {
+          imoveisData = AdminSync.clone(draft.properties);
+          baselineData = AdminSync.clone(draft.base);
+          preparedPublication = draft.prepared || null;
+        } else {
+          // Keep the last successful snapshot while Pages still serves an older data.js.
+          const source = remote || (draft && !draft.dirty ? draft.properties : published);
+          if (!source) throw new Error('Não foi possível carregar os imóveis. Recarregue a página antes de cadastrar ou sincronizar.');
+          imoveisData = AdminSync.clone(AdminSync.validate(source));
+          baselineData = AdminSync.clone(imoveisData);
+          preparedPublication = null;
+        }
+        const expirados = purgarLixeiraExpirada();
+        const renumerados = migrarIdsSequenciais();
+        adminReady = true;
+        renderList();
+        if (restored || expirados || renumerados) {
+          markDirty();
+          if (restored) showMsg('Alterações ainda não sincronizadas foram recuperadas deste navegador. Seus imóveis continuam disponíveis na lista.', 'success');
+        } else {
+          setSyncState('synced');
+          persistDraft(false);
+        }
+      } catch (error) {
+        showMsg(error.message, 'error');
+        setSyncState('error');
+      } finally {
+        catalogLoading = false;
+        lockCatalog(!adminReady);
+        document.getElementById('config-panel').inert = false;
       }
     }
+
+    // Keep the list visible until its durable draft and current repository are ready.
+    document.getElementById('list-panel').inert = true;
+    document.getElementById('btn-sync').disabled = true;
+    document.addEventListener('DOMContentLoaded', () => initializeAdminData());
+    window.addEventListener('beforeunload', event => {
+      if (syncInProgress || pendingDraftWrites || draftSaveFailed) {
+        event.preventDefault();
+        event.returnValue = '';
+      }
+    });
 
     // Cadastros parciais enviados pelo site (busca.html) via localStorage
     let pendingImoveis = JSON.parse(localStorage.getItem('pending_imoveis') || '[]');
@@ -1466,8 +1558,9 @@
     }
 
     function markDirty() {
-      if (syncState === 'syncing') return;
-      setSyncState('pending');
+      dataRevision++;
+      if (!syncInProgress) setSyncState('pending');
+      return persistDraft(true);
     }
 
     function playSyncSound() {
@@ -1511,11 +1604,13 @@
       });
     }
 
+    let statusTimer;
     function showMsg(text, type) {
       const el = document.getElementById('status-container');
       el.className = 'status-msg ' + type;
       el.innerText = text;
-      setTimeout(() => { el.className = 'status-msg'; }, 5000);
+      clearTimeout(statusTimer);
+      statusTimer = setTimeout(() => { el.className = 'status-msg'; }, 5000);
     }
 
     function switchPanel(panelId) {
@@ -1531,17 +1626,36 @@
       switchPanel('config-panel');
     }
 
-    function saveConfig() {
-      githubConfig.owner = document.getElementById('cfg-owner').value.trim();
-      githubConfig.repo = document.getElementById('cfg-repo').value.trim();
-      githubConfig.token = document.getElementById('cfg-token').value.trim();
-      
-      localStorage.setItem('gh_owner', githubConfig.owner);
-      localStorage.setItem('gh_repo', githubConfig.repo);
-      localStorage.setItem('gh_token', githubConfig.token);
-      
-      showMsg('Configurações salvas!', 'success');
-      showList();
+    async function saveConfig() {
+      if (syncInProgress || catalogLoading) return;
+      const previousKey = draftKey();
+      const unconfigured = !githubConfig.owner || !githubConfig.repo;
+      const next = Object.fromEntries(['owner', 'repo', 'token'].map(field => [field, document.getElementById(`cfg-${field}`).value.trim()]));
+      const nextKey = `${next.owner.toLowerCase()}/${next.repo.toLowerCase()}`;
+      let initialDraft = null;
+      lockCatalog(true);
+      try {
+        if (adminReady && syncState !== 'synced' && nextKey !== previousKey) {
+          // Keep this draft under its original repository before switching.
+          await persistDraft(true);
+          if (unconfigured && next.owner && next.repo) {
+            initialDraft = { properties: imoveisData, base: baselineData, dirty: true };
+          }
+        } else {
+          // A corrected token for the same repository can let a pending draft publish.
+          await draftWrites.catch(() => {});
+        }
+        for (const [field, value] of Object.entries(next)) localStorage.setItem(`gh_${field}`, value);
+        githubConfig = next;
+        if (!adminReady || nextKey !== previousKey) await initializeAdminData(initialDraft);
+        else showMsg('Configurações salvas!', 'success');
+        if (adminReady) showList();
+      } catch (error) {
+        showMsg(error.code === 'DRAFT_CONFLICT' ? error.message : 'Não foi possível guardar as configurações ou o rascunho neste navegador.', 'error');
+      } finally {
+        lockCatalog(!adminReady);
+        document.getElementById('config-panel').inert = false;
+      }
     }
 
     function showList() {
@@ -2828,30 +2942,22 @@
         listView = 'ativos'; // imóvel novo nasce publicado: mostra a aba onde ele está
       }
 
-      if (currentPendingId) {
-        pendingImoveis = pendingImoveis.filter(p => p.pendingId !== currentPendingId);
-        localStorage.setItem('pending_imoveis', JSON.stringify(pendingImoveis));
-        currentPendingId = null;
-        renderPendingList();
-      }
-
+      const pendingId = currentPendingId;
+      currentPendingId = null;
+      const saved = markDirty();
       closePropertyDialog();
       setListView(listView);
-      markDirty();
-    }
-
-    // Função para codificar em base64 corretamente lidando com UTF-8 (acentos)
-    function utf8_to_b64(str) {
-      return window.btoa(unescape(encodeURIComponent(str)));
-    }
-
-    async function readGithubError(response) {
-      try {
-        const data = await response.json();
-        return data.message || response.statusText || 'Erro desconhecido.';
-      } catch (_) {
-        return response.statusText || 'Erro desconhecido.';
-      }
+      saved.then(() => {
+        if (pendingId) {
+          const remaining = pendingImoveis.filter(p => p.pendingId !== pendingId);
+          localStorage.setItem('pending_imoveis', JSON.stringify(remaining));
+          pendingImoveis = remaining;
+          renderPendingList();
+        }
+        if (!syncInProgress && syncState === 'pending') {
+          showMsg('Cadastro salvo neste navegador. Clique em Sincronizar para enviar ao GitHub.', 'success');
+        }
+      }).catch(() => {});
     }
 
     function formatGithubError(message) {
@@ -2871,6 +2977,7 @@
     }
 
     async function saveToGithub() {
+      if (!adminReady || syncInProgress) return;
       if (!githubConfig.owner || !githubConfig.repo || !githubConfig.token) {
         showMsg('Por favor, configure o Token e os dados do repositório primeiro.', 'error');
         setSyncState('error');
@@ -2878,94 +2985,40 @@
         return;
       }
 
-      const btnSync = document.getElementById('btn-sync');
-      btnSync.disabled = true;
+      syncInProgress = true;
+      lockCatalog(true);
       setSyncState('syncing');
-
-      const headers = {
-        'Authorization': `Bearer ${githubConfig.token}`,
-        'Accept': 'application/vnd.github+json',
-        'Content-Type': 'application/json'
-      };
-      const apiBase = `https://api.github.com/repos/${githubConfig.owner}/${githubConfig.repo}`;
-
+      const revision = dataRevision;
+      const snapshot = AdminSync.clone(imoveisData);
       try {
-        // 0. Descobrir a branch padrão do repositório (usada para montar o link das fotos)
-        const repoRes = await fetch(apiBase, { headers });
-        if (!repoRes.ok) throw new Error(formatGithubError(await readGithubError(repoRes)));
-        const branch = (await repoRes.json()).default_branch || 'main';
-
-        // 1. Enviar cada foto nova (ainda em base64) como um arquivo separado em /images
-        let totalImgs = 0;
-        imoveisData.forEach(im => (im.imagens || []).forEach(src => { if (src.startsWith('data:')) totalImgs++; }));
-        let doneImgs = 0;
-
-        for (const imovel of imoveisData) {
-          if (!imovel.imagens) continue;
-          for (let i = 0; i < imovel.imagens.length; i++) {
-            const src = imovel.imagens[i];
-            if (!src.startsWith('data:')) continue; // já é uma foto sincronizada anteriormente
-
-            doneImgs++;
-            setSyncState('syncing', { text: `Enviando foto ${doneImgs}/${totalImgs}...` });
-
-            const fileName = `images/${imovel.id}-${Date.now()}-${i}.jpg`;
-            const putImgRes = await fetch(`${apiBase}/contents/${fileName}`, {
-              method: 'PUT',
-              headers,
-              body: JSON.stringify({
-                message: `Adiciona foto de ${imovel.nome}`,
-                content: src.split(',')[1],
-                branch
-              })
-            });
-            if (!putImgRes.ok) {
-              throw new Error(formatGithubError(await readGithubError(putImgRes)) || `Erro ao enviar uma foto de ${imovel.nome}.`);
-            }
-            imovel.imagens[i] = fileName;
-          }
-          imovel.imagem = imovel.imagens.length > 0 ? imovel.imagens[0] : '';
-        }
-
-        setSyncState('syncing', { text: 'Salvando dados...' });
-
-        // 2. Tentar pegar o SHA do data.js atual (se existir)
-        const path = 'data.js';
-        const url = `${apiBase}/contents/${path}`;
-        let sha = null;
-        const getRes = await fetch(url, { headers });
-        if (getRes.ok) {
-          sha = (await getRes.json()).sha;
-        } else if (getRes.status !== 404) {
-          throw new Error(formatGithubError(await readGithubError(getRes)));
-        }
-
-        // 3. Gerar o novo conteúdo do arquivo (agora só com links das fotos, sem base64)
-        const newContent = "window.imoveis = " + JSON.stringify(imoveisData, null, 2) + ";";
-        const base64Content = utf8_to_b64(newContent);
-
-        const body = { message: 'Atualizando imóveis pelo Admin', content: base64Content, branch };
-        if (sha) body.sha = sha;
-
-        const putRes = await fetch(url, {
-          method: 'PUT',
-          headers,
-          body: JSON.stringify(body)
-        });
-
-        if (putRes.ok) {
-          renderList(); // atualiza as miniaturas com os novos links das fotos
-          showMsg('Sucesso! Sincronizado com o GitHub. O site será atualizado em alguns minutos.', 'success');
-          setSyncState('synced', { animate: true });
-        } else {
-          throw new Error(formatGithubError(await readGithubError(putRes)));
-        }
+        // Save original photos before any network request. No live record is mutated.
+        await persistDraft(true).catch(() => {});
+        const published = await AdminSync.createClient(githubConfig).publish(
+          baselineData, snapshot,
+          text => setSyncState('syncing', { text }),
+          async properties => {
+            preparedPublication = { properties, source: snapshot };
+            await persistDraft(true).catch(() => {});
+          },
+          preparedPublication
+        );
+        baselineData = AdminSync.clone(published);
+        preparedPublication = null;
+        if (revision === dataRevision) imoveisData = published;
+        renderList();
+        const changed = revision !== dataRevision;
+        setSyncState(changed ? 'pending' : 'synced', { animate: !changed });
+        await persistDraft(changed).catch(() => {});
+        showMsg(changed
+          ? 'Os dados enviados foram sincronizados. Há novas alterações para sincronizar.'
+          : 'Catálogo salvo no GitHub. O site público pode levar alguns minutos para mostrar a atualização.', 'success');
       } catch (error) {
         console.error(error);
-        showMsg('Erro: ' + error.message, 'error');
+        showMsg('Erro: ' + formatGithubError(error.message) + ' Seus cadastros continuam nesta lista.', 'error');
         setSyncState('error');
       } finally {
-        btnSync.disabled = false;
+        syncInProgress = false;
+        lockCatalog(false);
       }
     }
 
