@@ -1011,7 +1011,7 @@ window.imoveis = [
   },
   {
     "id": "0005",
-    "nome": "Sobrado",
+    "nome": "Sobrado Centro BC",
     "construtora": "",
     "localizacao": "Centro, Balneário Camboriú",
     "cep": "88330-422",
@@ -1026,6 +1026,7 @@ window.imoveis = [
     "valorAluguel": "",
     "condominioIsento": false,
     "valorCondominio": "",
+    "periodoCondominio": "Mensal",
     "iptuIsento": false,
     "valorIptu": "",
     "periodoIptu": "Anual",
@@ -1786,7 +1787,9 @@ window.imoveis = [
       "Portaria remota"
     ],
     "descricao": "<p>Apartamento para Locação Anual 2 Suítes no Edifício Ilha dos Amores Praia Brava Itajaí</p><p>O Edifício Ilha dos Amores está localizado em uma região privilegiada, próxima ao mar, restaurantes, comércios e diversas opções de lazer, proporcionando praticidade e qualidade de vida.</p><p>Com 75 m² privativos, este apartamento foi planejado para oferecer ambientes funcionais, confortáveis e bem distribuídos. São 2 suítes, além de lavabo, ideal para maior comodidade ao receber familiares e amigos.</p><p>A área social conta com living integrado, reunindo sala de estar, sala de jantar, cozinha, espaço gourmet e churrasqueira a carvão, criando um ambiente agradável para o dia a dia e para momentos de convivência. O apartamento dispõe ainda de lavanderia e área de serviço, oferecendo praticidade para a rotina.</p><p>O imóvel está mobiliado, decorado e climatizado, pronto para morar, e conta com 2 vagas de garagem, garantindo mais comodidade aos moradores.</p><p>O Edifício Ilha dos Amores oferece uma estrutura de lazer e convivência que inclui salão de festas, salão de jogos e espaço gourmet, proporcionando ambientes para entretenimento e momentos especiais com familiares e amigos. O empreendimento também conta com elevador, portaria remota, interfone e câmeras de segurança, oferecendo mais praticidade e tranquilidade aos moradores.</p><p>Agende sua visita agora pelo whats (47) 92001-3095</p><p>Características do imóvel:</p><p>75 m² privativos<br>2 suítes<br>Mobiliado, decorado e climatizado<br>Lavabo<br>Living integrado<br>Sala de estar<br>Sala de jantar<br>Cozinha equipada<br>Espaço gourmet<br>Churrasqueira a carvão<br>Lavanderia<br>Área de serviço<br>2 vagas de garagem sendo 1 gaveta<br>Características do empreendimento:<br>Salão de festas<br>Salão de jogos<br>Hall de entrada decorado e mobiliado<br>Espaço gourmet<br>Elevador<br>Portaria remota<br>Interfone<br>Câmeras de segurança<br>Portões automáticos<br>Condições e disponibilidades sujeitas a alterações sem prévio aviso.<br>Aluguel: R$ 5.000,00<br>Condomínio + IPTU + ambiental: R$1.100,00</p>",
-    "descricaoMarkdown": "Apartamento para Locação Anual 2 Suítes no Edifício Ilha dos Amores Praia Brava Itajaí\n\nO Edifício Ilha dos Amores está localizado em uma região privilegiada, próxima ao mar, restaurantes, comércios e diversas opções de lazer, proporcionando praticidade e qualidade de vida.\n\nCom 75 m² privativos, este apartamento foi planejado para oferecer ambientes funcionais, confortáveis e bem distribuídos. São 2 suítes, além de lavabo, ideal para maior comodidade ao receber familiares e amigos.\n\nA área social conta com living integrado, reunindo sala de estar, sala de jantar, cozinha, espaço gourmet e churrasqueira a carvão, criando um ambiente agradável para o dia a dia e para momentos de convivência. O apartamento dispõe ainda de lavanderia e área de serviço, oferecendo praticidade para a rotina.\n\nO imóvel está mobiliado, decorado e climatizado, pronto para morar, e conta com 2 vagas de garagem, garantindo mais comodidade aos moradores.\n\nO Edifício Ilha dos Amores oferece uma estrutura de lazer e convivência que inclui salão de festas, salão de jogos e espaço gourmet, proporcionando ambientes para entretenimento e momentos especiais com familiares e amigos. O empreendimento também conta com elevador, portaria remota, interfone e câmeras de segurança, oferecendo mais praticidade e tranquilidade aos moradores.\n\nAgende sua visita agora pelo whats (47) 92001-3095\n\nCaracterísticas do imóvel:\n\n75 m² privativos\n2 suítes\nMobiliado, decorado e climatizado\nLavabo\nLiving integrado\nSala de estar\nSala de jantar\nCozinha equipada\nEspaço gourmet\nChurrasqueira a carvão\nLavanderia\nÁrea de serviço\n2 vagas de garagem sendo 1 gaveta\nCaracterísticas do empreendimento:\nSalão de festas\nSalão de jogos\nHall de entrada decorado e mobiliado\nEspaço gourmet\nElevador\nPortaria remota\nInterfone\nCâmeras de segurança\nPortões automáticos\nCondições e disponibilidades sujeitas a alterações sem prévio aviso.\nAluguel: R$ 5.000,00\nCondomínio + IPTU + ambiental: R$1.100,00"
+    "descricaoMarkdown": "Apartamento para Locação Anual 2 Suítes no Edifício Ilha dos Amores Praia Brava Itajaí\n\nO Edifício Ilha dos Amores está localizado em uma região privilegiada, próxima ao mar, restaurantes, comércios e diversas opções de lazer, proporcionando praticidade e qualidade de vida.\n\nCom 75 m² privativos, este apartamento foi planejado para oferecer ambientes funcionais, confortáveis e bem distribuídos. São 2 suítes, além de lavabo, ideal para maior comodidade ao receber familiares e amigos.\n\nA área social conta com living integrado, reunindo sala de estar, sala de jantar, cozinha, espaço gourmet e churrasqueira a carvão, criando um ambiente agradável para o dia a dia e para momentos de convivência. O apartamento dispõe ainda de lavanderia e área de serviço, oferecendo praticidade para a rotina.\n\nO imóvel está mobiliado, decorado e climatizado, pronto para morar, e conta com 2 vagas de garagem, garantindo mais comodidade aos moradores.\n\nO Edifício Ilha dos Amores oferece uma estrutura de lazer e convivência que inclui salão de festas, salão de jogos e espaço gourmet, proporcionando ambientes para entretenimento e momentos especiais com familiares e amigos. O empreendimento também conta com elevador, portaria remota, interfone e câmeras de segurança, oferecendo mais praticidade e tranquilidade aos moradores.\n\nAgende sua visita agora pelo whats (47) 92001-3095\n\nCaracterísticas do imóvel:\n\n75 m² privativos\n2 suítes\nMobiliado, decorado e climatizado\nLavabo\nLiving integrado\nSala de estar\nSala de jantar\nCozinha equipada\nEspaço gourmet\nChurrasqueira a carvão\nLavanderia\nÁrea de serviço\n2 vagas de garagem sendo 1 gaveta\nCaracterísticas do empreendimento:\nSalão de festas\nSalão de jogos\nHall de entrada decorado e mobiliado\nEspaço gourmet\nElevador\nPortaria remota\nInterfone\nCâmeras de segurança\nPortões automáticos\nCondições e disponibilidades sujeitas a alterações sem prévio aviso.\nAluguel: R$ 5.000,00\nCondomínio + IPTU + ambiental: R$1.100,00",
+    "lixeira": true,
+    "deletadoEm": "2026-11-19T20:11:29.259Z"
   },
   {
     "id": "0010",
@@ -1941,11 +1944,12 @@ window.imoveis = [
     "endereco": "Rua José Venâncio dos Santos",
     "numero": "100",
     "complemento": "902",
-    "preco": "R$ 1.950.000",
+    "preco": "R$ 1.850.000",
     "valorVenda": "R$ 1.950.000",
     "valorAluguel": "",
     "condominioIsento": false,
     "valorCondominio": "R$ 1.000",
+    "periodoCondominio": "Mensal",
     "iptuIsento": false,
     "valorIptu": "R$ 120",
     "periodoIptu": "Mensal",
@@ -2287,7 +2291,7 @@ window.imoveis = [
   {
     "id": "0019",
     "nome": "Edifício Cyano Mare",
-    "construtora": "",
+    "construtora": "Ciaplan",
     "localizacao": "Centro, Balneário Camboriú",
     "cep": "88330-725",
     "cidade": "Balneário Camboriú",
@@ -2315,14 +2319,12 @@ window.imoveis = [
     "areaUtil": "190 m²",
     "areaTotal": "",
     "imagens": [
-      "images/0019-1793646999275-0.jpg",
       "images/0019-1793647001723-1.jpg",
       "images/0019-1793647004279-2.jpg",
       "images/0019-1793647006236-3.jpg",
       "images/0019-1793647008670-4.jpg",
       "images/0019-1793647011048-5.jpg",
       "images/0019-1793647013199-6.jpg",
-      "images/0019-1793647015695-7.jpg",
       "images/0019-1793647018088-8.jpg",
       "images/0019-1793647020439-9.jpg",
       "images/0019-1793647022706-10.jpg",
@@ -2332,6 +2334,8 @@ window.imoveis = [
       "images/0019-1793647032421-14.jpg",
       "images/0019-1793647034767-15.jpg",
       "images/0019-1793647036813-16.jpg",
+      "images/0019-1793647015695-7.jpg",
+      "images/0019-1793646999275-0.jpg",
       "images/0019-1793647039617-17.jpg",
       "images/0019-1793647041562-18.jpg",
       "images/0019-1793647044021-19.jpg",
@@ -2374,7 +2378,7 @@ window.imoveis = [
       "Academia",
       "Playgroud"
     ],
-    "imagem": "images/0019-1793646999275-0.jpg",
+    "imagem": "images/0019-1793647001723-1.jpg",
     "youtube": "https://www.youtube.com/watch?v=LgurhoPGXjE",
     "badges": [
       "Novo",
