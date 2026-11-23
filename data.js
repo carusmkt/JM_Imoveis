@@ -2195,7 +2195,7 @@ window.imoveis = [
     "suites": 3,
     "banheiros": 3,
     "vagas": 2,
-    "areaUtil": "106.80 m²",
+    "areaUtil": "126.80 m²",
     "areaTotal": "",
     "imagens": [
       "images/0015-1792007895328-0.jpg",
